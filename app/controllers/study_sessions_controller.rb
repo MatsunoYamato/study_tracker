@@ -4,8 +4,20 @@ class StudySessionsController < ApplicationController
 
   # GET /study_sessions
   def index
-    @study_sessions = current_user.study_sessions.recent.includes(:tags)
+    @study_sessions = current_user.study_sessions.includes(:tags)
+    
+    # 検索・フィルター機能
+    @study_sessions = apply_filters(@study_sessions)
+    
+    # 並び替え
+    @study_sessions = apply_sorting(@study_sessions)
+    
+    # ページネーション
     @pagy, @study_sessions = pagy(@study_sessions, items: 10) if defined?(Pagy)
+    
+    # フィルター用のデータ
+    @tags = Tag.all.order(:name)
+    @search_params = search_params
   end
 
   # GET /study_sessions/1
@@ -111,5 +123,64 @@ class StudySessionsController < ApplicationController
     tag_ids.reject(&:blank?).each do |tag_id|
       study_session.study_session_tags.create(tag_id: tag_id)
     end
+  end
+
+  # 検索・フィルター機能
+  def apply_filters(study_sessions)
+    # 日付範囲での絞り込み
+    if params[:date_from].present?
+      study_sessions = study_sessions.where('studied_at >= ?', Date.parse(params[:date_from]).beginning_of_day)
+    end
+    
+    if params[:date_to].present?
+      study_sessions = study_sessions.where('studied_at <= ?', Date.parse(params[:date_to]).end_of_day)
+    end
+    
+    # タグでの絞り込み
+    if params[:tag_ids].present? && params[:tag_ids].any?(&:present?)
+      tag_ids = params[:tag_ids].select(&:present?)
+      study_sessions = study_sessions.joins(:tags).where(tags: { id: tag_ids }).distinct
+    end
+    
+    # キーワード検索（メモ内容で検索）
+    if params[:keyword].present?
+      study_sessions = study_sessions.where('note ILIKE ?', "%#{params[:keyword]}%")
+    end
+    
+    # 学習時間での絞り込み
+    if params[:duration_min].present?
+      study_sessions = study_sessions.where('duration >= ?', params[:duration_min])
+    end
+    
+    if params[:duration_max].present?
+      study_sessions = study_sessions.where('duration <= ?', params[:duration_max])
+    end
+    
+    study_sessions
+  end
+
+  # 並び替え機能
+  def apply_sorting(study_sessions)
+    case params[:sort]
+    when 'date_asc'
+      study_sessions.order(:studied_at)
+    when 'date_desc'
+      study_sessions.order(studied_at: :desc)
+    when 'duration_asc'
+      study_sessions.order(:duration)
+    when 'duration_desc'
+      study_sessions.order(duration: :desc)
+    when 'created_asc'
+      study_sessions.order(:created_at)
+    when 'created_desc'
+      study_sessions.order(created_at: :desc)
+    else
+      study_sessions.order(studied_at: :desc) # デフォルト: 学習日時の降順
+    end
+  end
+
+  # 検索パラメータ
+  def search_params
+    params.permit(:date_from, :date_to, :keyword, :duration_min, :duration_max, :sort, tag_ids: [])
   end
 end
