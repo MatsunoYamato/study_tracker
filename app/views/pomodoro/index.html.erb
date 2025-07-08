@@ -80,7 +80,7 @@
           <%# 記録保存フォーム %>
           <div id="session-form" class="hidden border-t pt-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">セッションを記録</h3>
-            <%= form_with url: '/pomodoro/save_session', method: :post, local: false, id: 'save-session-form', class: "space-y-4" do |form| %>
+            <%= form_with model: StudySession.new, url: '/pomodoro/save_session', method: :post, local: false, id: 'save-session-form', class: "space-y-4" do |form| %>
               <div>
                 <%= form.label :note, "メモ（任意）", class: "block text-sm font-medium text-gray-700 mb-1" %>
                 <%= form.text_area :note, 
@@ -197,7 +197,6 @@
 <script>
 // Turbo対応: turbo:loadイベントでも実行
 function initPomodoroTimer() {
-  console.log('ポモドーロタイマー初期化開始');
   
   // 既存のタイマーをクリア
   if (window.pomodoroTimerInterval) {
@@ -286,7 +285,6 @@ function initPomodoroTimer() {
   
   // タイマー開始
   function startTimer() {
-    console.log('タイマー開始:', remainingSeconds); // デバッグ用
     if (window.pomodoroTimerInterval) {
       clearInterval(window.pomodoroTimerInterval);
     }
@@ -298,7 +296,6 @@ function initPomodoroTimer() {
     
     window.pomodoroTimerInterval = setInterval(function() {
       remainingSeconds--;
-      console.log('残り時間:', remainingSeconds); // デバッグ用
       updateDisplay();
       
       if (remainingSeconds <= 0) {
@@ -366,16 +363,20 @@ function initPomodoroTimer() {
       const elapsedMinutes = Math.round((currentTime - startTime) / (1000 * 60));
       
       // フォームに実際の時間を設定
-      const durationField = document.querySelector('#save-session-form input[name="duration"]');
+      const durationField = document.querySelector('#save-session-form input[name="study_session[duration]"]');
+      const studiedAtField = document.querySelector('#save-session-form input[name="study_session[studied_at]"]');
       if (durationField) {
         durationField.value = Math.max(1, elapsedMinutes); // 最低1分
+      }
+      if (studiedAtField) {
+        studiedAtField.value = startTime.toISOString(); // 開始時間を記録
       }
       
       // セッション保存フォームを表示
       sessionForm.classList.remove('hidden');
       showButtons(['reset']);
       
-      showToast(`${elapsedMinutes}分間のセッションが完了しました！`, 'success');
+      // Toast通知は保存時に表示するので、ここでは表示しない
     } else {
       showToast('記録できる学習時間がありません', 'warning');
     }
@@ -386,10 +387,10 @@ function initPomodoroTimer() {
     // 音声通知
     try {
       timerSound.play().catch(function(error) {
-        console.log('音声再生に失敗:', error);
+        // 音声再生に失敗した場合は静かに無視
       });
     } catch (error) {
-      console.log('音声再生に失敗:', error);
+      // 音声再生に失敗した場合は静かに無視
     }
     
     // ブラウザ通知
@@ -410,6 +411,16 @@ function initPomodoroTimer() {
       showButtons(['start']);
     } else {
       // 作業終了 → セッション保存画面表示
+      if (startTime) {
+        const durationField = document.querySelector('#save-session-form input[name="study_session[duration]"]');
+        const studiedAtField = document.querySelector('#save-session-form input[name="study_session[studied_at]"]');
+        if (durationField) {
+          durationField.value = 25; // 完了時は25分
+        }
+        if (studiedAtField) {
+          studiedAtField.value = startTime.toISOString(); // 開始時間を記録
+        }
+      }
       sessionForm.classList.remove('hidden');
       showButtons(['reset']);
     }
@@ -479,14 +490,16 @@ function initPomodoroTimer() {
     .then(response => response.json())
     .then(data => {
       if (data.status === 'success') {
-        showToast(data.message, 'success');
+        // セッション時間を含む成功メッセージ
+        const durationField = document.querySelector('#save-session-form input[name="study_session[duration]"]');
+        const minutes = durationField ? durationField.value : '?';
+        showToast(`${minutes}分間のセッションを保存しました！`, 'success');
         startBreak();
       } else {
         showToast('保存に失敗しました: ' + data.message, 'error');
       }
     })
     .catch(error => {
-      console.error('Error:', error);
       showToast('保存中にエラーが発生しました', 'error');
     });
   });
@@ -517,8 +530,6 @@ function initPomodoroTimer() {
   // 初期表示
   updateDisplay();
   showButtons(['start']);
-  
-  console.log('ポモドーロタイマー初期化完了');
 }
 
 // DOMContentLoadedとturbo:loadの両方で実行

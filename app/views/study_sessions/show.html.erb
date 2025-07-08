@@ -13,8 +13,10 @@
           <%= link_to "編集", edit_study_session_path(@study_session), 
                       class: "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors" %>
           <%= link_to "削除", @study_session, 
-                      method: :delete, 
-                      data: { confirm: "本当に削除しますか？" },
+                      data: { 
+                        "turbo-method": :delete,
+                        confirm: "本当に削除しますか？"
+                      },
                       class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors" %>
         </div>
       </div>

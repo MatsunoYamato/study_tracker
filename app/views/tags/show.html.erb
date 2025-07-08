@@ -22,10 +22,15 @@
         <div class="flex space-x-2">
           <%= link_to "一覧に戻る", tags_path, 
                       class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors" %>
-          <% unless @tag.is_preset? %>
-            <%= link_to "編集", edit_tag_path(@tag), 
-                        class: "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors" %>
-          <% end %>
+          <%= link_to "編集", edit_tag_path(@tag), 
+                      class: "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+          <%= link_to "削除", tag_path(@tag), 
+                      data: { 
+                        "turbo-method": :delete,
+                        confirm: "本当に「#{@tag.name}」タグを削除しますか？",
+                        turbo_confirm: "本当に「#{@tag.name}」タグを削除しますか？"
+                      },
+                      class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors" %>
         </div>
       </div>
 

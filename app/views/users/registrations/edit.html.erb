@@ -13,9 +13,11 @@
     <%# アカウント情報カード %>
     <div class="bg-white rounded-lg shadow-md p-6 mb-6">
       <div class="flex items-center mb-6">
-        <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mr-4" id="current-profile-image">
-          <% if current_user.profile_image.present? %>
-            <div class="w-16 h-16 rounded-full bg-center bg-cover" style="background-image: url('<%= current_user.profile_image %>')"></div>
+        <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mr-4 overflow-hidden" id="current-profile-image">
+          <% if current_user.avatar.attached? %>
+            <%= image_tag current_user.avatar, 
+                         class: "w-16 h-16 object-cover rounded-full",
+                         alt: "プロフィール画像" %>
           <% else %>
             <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -32,32 +34,33 @@
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
         <%= render "users/shared/error_messages", resource: resource %>
 
-        <%# プロフィール画像選択 %>
+        <%# プロフィール画像アップロード %>
         <div>
-          <%= f.label :profile_image, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-3" %>
-          <div class="grid grid-cols-4 gap-3">
-            <%# デフォルト画像 %>
-            <label class="cursor-pointer">
-              <%= f.radio_button :profile_image, "", class: "sr-only profile-image-radio" %>
-              <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center hover:bg-gray-400 transition-colors border-2 border-transparent radio-border">
-                <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <%= f.label :avatar, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-3" %>
+          <div class="flex items-center space-x-4">
+            <div class="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden" id="avatar-preview">
+              <% if current_user.avatar.attached? %>
+                <%= image_tag current_user.avatar, 
+                             class: "w-20 h-20 object-cover rounded-full",
+                             alt: "プロフィール画像" %>
+              <% else %>
+                <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
-              </div>
-              <p class="text-xs text-center mt-1">デフォルト</p>
-            </label>
-            
-            <%# プリセット画像（絵文字アバター） %>
-            <% %w[😊 🤓 🧑‍💻 📚 🎯 🏃‍♂️ 🎨 🎵 🍳 🌟 🚀 💡].each do |emoji| %>
-              <label class="cursor-pointer">
-                <%= f.radio_button :profile_image, emoji, class: "sr-only profile-image-radio" %>
-                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-2xl hover:bg-blue-200 transition-colors border-2 border-transparent radio-border">
-                  <%= emoji %>
-                </div>
-                <p class="text-xs text-center mt-1">絵文字</p>
-              </label>
-            <% end %>
+              <% end %>
+            </div>
+            <div>
+              <%= f.file_field :avatar, 
+                              accept: "image/jpeg,image/png,image/gif",
+                              class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100",
+                              id: "avatar-upload" %>
+              <p class="mt-1 text-xs text-gray-500">JPEG、PNG、GIF形式（最大2MB）</p>
+              <% if current_user.avatar.attached? %>
+                <button type="button" id="remove-avatar" class="mt-2 text-sm text-red-600 hover:text-red-800">画像を削除</button>
+                <%= f.hidden_field :remove_avatar, value: false, id: "remove-avatar-field" %>
+              <% end %>
+            </div>
           </div>
         </div>
 
@@ -170,65 +173,54 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const profileImageRadios = document.querySelectorAll('.profile-image-radio');
-  const currentProfileImage = document.getElementById('current-profile-image');
+  const avatarUpload = document.getElementById('avatar-upload');
+  const avatarPreview = document.getElementById('avatar-preview');
+  const removeAvatarBtn = document.getElementById('remove-avatar');
+  const removeAvatarField = document.getElementById('remove-avatar-field');
   
-  // 現在選択されている画像にボーダーを追加
-  function updateSelection() {
-    profileImageRadios.forEach(radio => {
-      const border = radio.parentElement.querySelector('.radio-border');
-      if (radio.checked) {
-        border.classList.add('border-blue-500');
-        border.classList.remove('border-transparent');
-      } else {
-        border.classList.remove('border-blue-500');
-        border.classList.add('border-transparent');
+  // ファイル選択時のプレビュー
+  if (avatarUpload) {
+    avatarUpload.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        // ファイルサイズチェック
+        if (file.size > 2 * 1024 * 1024) {
+          alert('ファイルサイズは2MB以下にしてください');
+          e.target.value = '';
+          return;
+        }
+        
+        // ファイル形式チェック
+        if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+          alert('JPEG、PNG、GIF形式のファイルをアップロードしてください');
+          e.target.value = '';
+          return;
+        }
+        
+        // プレビュー表示
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          avatarPreview.innerHTML = `<img src="${e.target.result}" class="w-20 h-20 object-cover rounded-full" alt="プレビュー">`;
+        };
+        reader.readAsDataURL(file);
       }
     });
   }
   
-  // プレビュー更新
-  function updatePreview(value) {
-    const container = currentProfileImage.querySelector('div') || currentProfileImage;
-    
-    if (value === '') {
-      // デフォルト画像
-      container.innerHTML = `
-        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-        </svg>
-      `;
-      container.className = 'w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center';
-    } else if (value.match(/^\p{Emoji}+$/u)) {
-      // 絵文字
-      container.innerHTML = value;
-      container.className = 'w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-2xl';
-    } else {
-      // カスタム画像URL（将来の拡張用）
-      container.innerHTML = '';
-      container.className = 'w-16 h-16 rounded-full bg-center bg-cover';
-      container.style.backgroundImage = `url('${value}')`;
-    }
-  }
-  
-  // ラジオボタンのイベントリスナー
-  profileImageRadios.forEach(radio => {
-    radio.addEventListener('change', function() {
-      if (this.checked) {
-        updatePreview(this.value);
-        updateSelection();
+  // 画像削除ボタン
+  if (removeAvatarBtn) {
+    removeAvatarBtn.addEventListener('click', function() {
+      if (confirm('プロフィール画像を削除しますか？')) {
+        removeAvatarField.value = 'true';
+        avatarPreview.innerHTML = `
+          <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        `;
+        removeAvatarBtn.style.display = 'none';
       }
     });
-  });
-  
-  // 初期状態の設定
-  updateSelection();
+  }
 });
 </script>
-
-<style>
-.radio-border {
-  transition: border-color 0.2s ease;
-}
-</style>

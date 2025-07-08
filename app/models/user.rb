@@ -26,6 +26,25 @@ class User < ApplicationRecord
   has_many :study_sessions, dependent: :destroy
   has_many :study_session_tags, through: :study_sessions
   has_many :tags, through: :study_session_tags
-
+  
+  # プロフィール画像
+  has_one_attached :avatar
+  
   validates :email, presence: true, uniqueness: true
+  validate :avatar_size_validation, if: -> { avatar.attached? }
+  validate :avatar_content_type_validation, if: -> { avatar.attached? }
+
+  private
+
+  def avatar_size_validation
+    if avatar.blob.byte_size > 2.megabytes
+      errors.add(:avatar, 'のファイルサイズは2MB以下にしてください')
+    end
+  end
+
+  def avatar_content_type_validation
+    unless avatar.blob.content_type.in?(['image/jpeg', 'image/png', 'image/gif'])
+      errors.add(:avatar, 'はJPEG、PNG、GIF形式のファイルをアップロードしてください')
+    end
+  end
 end

@@ -6,8 +6,13 @@ module ApplicationHelper
     if minutes < 60
       "#{minutes}分"
     else
-      hours = minutes / 60.0
-      "#{hours.round(1)}時間"
+      hours = minutes / 60
+      remaining_minutes = minutes % 60
+      if remaining_minutes == 0
+        "#{hours}時間"
+      else
+        "#{hours}時間#{remaining_minutes}分"
+      end
     end
   end
 

@@ -33,13 +33,11 @@
       <div class="flex items-center space-x-4">
         <div class="relative group">
           <button class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors">
-            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <% if current_user.profile_image.present? %>
-                <% if current_user.profile_image.match(/^\p{Emoji}+$/) %>
-                  <span class="text-lg"><%= current_user.profile_image %></span>
-                <% else %>
-                  <div class="w-8 h-8 rounded-full bg-center bg-cover" style="background-image: url('<%= current_user.profile_image %>')"></div>
-                <% end %>
+            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
+              <% if current_user.avatar.attached? %>
+                <%= image_tag current_user.avatar, 
+                             class: "w-8 h-8 object-cover rounded-full",
+                             alt: "プロフィール画像" %>
               <% else %>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -64,7 +62,10 @@
         </div>
 
         <%# モバイルメニューボタン %>
-        <button id="mobile-menu-button" class="md:hidden text-gray-700 hover:text-blue-600 transition-colors">
+        <button id="mobile-menu-button" 
+                class="md:hidden text-gray-700 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
+                aria-expanded="false"
+                aria-label="メニューを開く">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M4 6h16M4 12h16M4 18h16"></path>
@@ -74,31 +75,52 @@
     </div>
 
     <%# モバイルメニュー %>
-    <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 py-4">
-      <div class="flex flex-col space-y-2">
+    <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 bg-white">
+      <div class="px-4 py-4 space-y-1">
         <%= link_to "ダッシュボード", dashboard_path, 
-                    class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
+                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(dashboard_path)}" %>
         <%= link_to "学習記録", study_sessions_path, 
-                    class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
+                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(study_sessions_path)}" %>
         <%= link_to "タグ管理", tags_path, 
-                    class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
+                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(tags_path)}" %>
         <%= link_to "ポモドーロ", pomodoro_path, 
-                    class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
+                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(pomodoro_path)}" %>
+        <div class="border-t border-gray-200 my-2"></div>
         <%= link_to "記録を追加", new_study_session_path, 
-                    class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
+                    class: "block bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-colors text-center font-medium" %>
+        <div class="border-t border-gray-200 my-2"></div>
+        <%= link_to "プロフィール", edit_user_registration_path, 
+                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors" %>
+        <%= link_to "ログアウト", destroy_user_session_path, 
+                    data: { "turbo-method": :delete }, 
+                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors" %>
       </div>
     </div>
   </div>
 </nav>
 
 <script>
-  // モバイルメニューの切り替え
-  document.addEventListener('DOMContentLoaded', function() {
+  // モバイルメニューの切り替え（Turbo対応）
+  function initMobileMenu() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     
-    mobileMenuButton.addEventListener('click', function() {
-      mobileMenu.classList.toggle('hidden');
-    });
-  });
+    if (mobileMenuButton && mobileMenu) {
+      // 既存のイベントリスナーを削除して重複を防ぐ
+      mobileMenuButton.replaceWith(mobileMenuButton.cloneNode(true));
+      const newMobileMenuButton = document.getElementById('mobile-menu-button');
+      
+      newMobileMenuButton.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+        
+        // アニメーション用にaria-expandedも更新
+        const isExpanded = !mobileMenu.classList.contains('hidden');
+        newMobileMenuButton.setAttribute('aria-expanded', isExpanded);
+      });
+    }
+  }
+  
+  // DOMContentLoadedとturbo:loadの両方で実行
+  document.addEventListener('DOMContentLoaded', initMobileMenu);
+  document.addEventListener('turbo:load', initMobileMenu);
 </script>

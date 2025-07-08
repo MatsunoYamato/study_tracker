@@ -115,7 +115,7 @@
               <div class="flex-1">
                 <div class="flex items-center space-x-2">
                   <p class="font-medium text-gray-900">
-                    <%= session.formatted_duration %>
+                    <%= format_duration_minutes(session.duration) %>
                   </p>
                   <span class="text-gray-500">•</span>
                   <p class="text-sm text-gray-600">
@@ -191,11 +191,16 @@ document.addEventListener('DOMContentLoaded', function() {
     datasets: [{
       label: '学習時間（分）',
       data: <%= raw @weekly_chart_data[:data].to_json %>,
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+      backgroundColor: 'rgba(59, 130, 246, 0.2)',
       borderColor: 'rgba(59, 130, 246, 1)',
-      borderWidth: 2,
+      borderWidth: 3,
       fill: true,
-      tension: 0.4
+      tension: 0.3,
+      pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+      pointBorderColor: 'rgba(255, 255, 255, 1)',
+      pointBorderWidth: 2,
+      pointRadius: 6,
+      pointHoverRadius: 8
     }]
   };
   
@@ -204,11 +209,16 @@ document.addEventListener('DOMContentLoaded', function() {
     datasets: [{
       label: '学習時間（分）',
       data: <%= raw @monthly_chart_data[:data].to_json %>,
-      backgroundColor: 'rgba(59, 130, 246, 0.1)',
-      borderColor: 'rgba(59, 130, 246, 1)',
-      borderWidth: 2,
+      backgroundColor: 'rgba(16, 185, 129, 0.2)',
+      borderColor: 'rgba(16, 185, 129, 1)',
+      borderWidth: 3,
       fill: true,
-      tension: 0.4
+      tension: 0.3,
+      pointBackgroundColor: 'rgba(16, 185, 129, 1)',
+      pointBorderColor: 'rgba(255, 255, 255, 1)',
+      pointBorderWidth: 2,
+      pointRadius: 6,
+      pointHoverRadius: 8
     }]
   };
   
@@ -219,33 +229,51 @@ document.addEventListener('DOMContentLoaded', function() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      },
       plugins: {
         legend: {
-          display: false
+          display: true,
+          position: 'top'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const value = context.parsed.y;
+              if (value >= 60) {
+                const hours = Math.floor(value / 60);
+                const minutes = value % 60;
+                return `学習時間: ${hours}時間${minutes > 0 ? minutes + '分' : ''}`;
+              }
+              return `学習時間: ${value}分`;
+            }
+          }
         }
       },
       scales: {
         y: {
           beginAtZero: true,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.1)'
+          },
           ticks: {
             callback: function(value) {
               if (value >= 60) {
-                return (value / 60).toFixed(1) + '時間';
+                return (value / 60).toFixed(1) + 'h';
               }
-              return value + '分';
+              return value + 'm';
             }
           }
         },
         x: {
           grid: {
             display: false
+          },
+          ticks: {
+            maxTicksLimit: 10
           }
-        }
-      },
-      elements: {
-        point: {
-          radius: 4,
-          hoverRadius: 6
         }
       }
     }
