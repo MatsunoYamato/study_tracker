@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   
   # 学習記録のRESTfulルート
   resources :study_sessions do
-    member do
+    collection do
       patch :quick_record  # ポモドーロ用クイック記録
     end
   end

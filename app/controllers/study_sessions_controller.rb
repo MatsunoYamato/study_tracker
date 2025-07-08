@@ -73,7 +73,7 @@ class StudySessionsController < ApplicationController
                             .sum(:duration)
   end
 
-  # PATCH /study_sessions/1/quick_record
+  # PATCH /study_sessions/quick_record
   def quick_record
     @study_session = current_user.study_sessions.build(
       duration: 25,
