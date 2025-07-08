@@ -12,9 +12,15 @@
 #
 FactoryBot.define do
   factory :tag do
-    name { "MyString" }
-    description { "MyText" }
-    color { "MyString" }
+    name { Faker::ProgrammingLanguage.name }
+    description { Faker::Lorem.sentence }
+    color { "##{Faker::Color.hex_color.delete('#').upcase}" }
     is_preset { false }
+    
+    trait :preset do
+      is_preset { true }
+      name { "Ruby" }
+      color { "#CC342D" }
+    end
   end
 end

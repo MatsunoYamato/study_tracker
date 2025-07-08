@@ -1,0 +1,154 @@
+<%# ダッシュボード画面 - 学習記録アプリのメイン画面 %>
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">学習ダッシュボード</h1>
+    <div class="flex space-x-4">
+      <%= link_to "記録を追加", new_study_session_path, 
+                  class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+      <%= link_to "全記録を見る", study_sessions_path, 
+                  class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+    </div>
+  </div>
+
+  <%# 統計情報カード %>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <%# 今日の学習時間 %>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="flex items-center">
+        <div class="p-3 bg-blue-100 rounded-full">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-600">今日の学習時間</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            <%= (@today_total_minutes / 60.0).round(1) %>時間
+          </p>
+          <p class="text-sm text-gray-500">(<%= @today_total_minutes %>分)</p>
+        </div>
+      </div>
+    </div>
+
+    <%# 今週の学習時間 %>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="flex items-center">
+        <div class="p-3 bg-green-100 rounded-full">
+          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-600">今週の学習時間</p>
+          <p class="text-2xl font-semibold text-gray-900">
+            <%= (@week_total_minutes / 60.0).round(1) %>時間
+          </p>
+          <p class="text-sm text-gray-500">(<%= @week_total_minutes %>分)</p>
+        </div>
+      </div>
+    </div>
+
+    <%# 総学習セッション数 %>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <div class="flex items-center">
+        <div class="p-3 bg-purple-100 rounded-full">
+          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-600">総学習セッション</p>
+          <p class="text-2xl font-semibold text-gray-900"><%= @total_sessions %></p>
+          <p class="text-sm text-gray-500">回</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# クイック記録ボタン %>
+  <div class="bg-orange-50 p-6 rounded-lg shadow-md mb-8">
+    <div class="flex items-center justify-between">
+      <div>
+        <h3 class="text-lg font-semibold text-orange-800">ポモドーロセッション</h3>
+        <p class="text-orange-600">25分の学習記録を素早く追加</p>
+      </div>
+      <%= button_to "25分記録する", quick_record_study_session_path(0), 
+                    method: :patch, 
+                    class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <%# 最近の学習記録 %>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">最近の学習記録</h2>
+      <% if @recent_sessions.any? %>
+        <div class="space-y-4">
+          <% @recent_sessions.each do |session| %>
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div class="flex-1">
+                <div class="flex items-center space-x-2">
+                  <p class="font-medium text-gray-900">
+                    <%= session.duration_in_hours %>時間
+                  </p>
+                  <span class="text-gray-500">•</span>
+                  <p class="text-sm text-gray-600">
+                    <%= session.studied_at.strftime("%m/%d %H:%M") %>
+                  </p>
+                </div>
+                <% if session.note.present? %>
+                  <p class="text-sm text-gray-500 mt-1"><%= session.note %></p>
+                <% end %>
+                <div class="flex space-x-2 mt-2">
+                  <% session.tags.each do |tag| %>
+                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium" 
+                          style="background-color: <%= tag.color %>20; color: <%= tag.color %>;">
+                      <%= tag.name %>
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+              <div class="flex space-x-2">
+                <%= link_to "詳細", session, class: "text-blue-600 hover:text-blue-800 text-sm" %>
+                <%= link_to "編集", edit_study_session_path(session), class: "text-green-600 hover:text-green-800 text-sm" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8 text-gray-500">
+          <p class="mb-4">学習記録がありません</p>
+          <%= link_to "最初の記録を作成", new_study_session_path, 
+                      class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+        </div>
+      <% end %>
+    </div>
+
+    <%# タグ別統計 %>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">タグ別学習時間</h2>
+      <% if @tag_stats.any? %>
+        <div class="space-y-3">
+          <% @tag_stats.each do |(tag_name, tag_color), minutes| %>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="w-4 h-4 rounded-full" style="background-color: <%= tag_color %>;"></div>
+                <span class="font-medium text-gray-900"><%= tag_name %></span>
+              </div>
+              <span class="text-sm text-gray-600">
+                <%= (minutes / 60.0).round(1) %>時間
+              </span>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8 text-gray-500">
+          <p>タグ付きの学習記録がありません</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

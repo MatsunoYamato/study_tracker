@@ -20,7 +20,7 @@
 #
 FactoryBot.define do
   factory :study_session_tag do
-    study_session { nil }
-    tag { nil }
+    study_session
+    tag
   end
 end

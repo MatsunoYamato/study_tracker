@@ -19,5 +19,38 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "バリデーション" do
+    it "有効なファクトリを持つ" do
+      user = build(:user)
+      expect(user).to be_valid
+    end
+    
+    it "メールアドレスが必須" do
+      user = build(:user, email: nil)
+      expect(user).not_to be_valid
+      expect(user.errors[:email]).to include("can't be blank")
+    end
+    
+    it "重複したメールアドレスは無効" do
+      create(:user, email: "test@example.com")
+      user = build(:user, email: "test@example.com")
+      expect(user).not_to be_valid
+    end
+  end
+  
+  describe "関連付け" do
+    it "学習記録を持つ" do
+      user = create(:user)
+      study_session = create(:study_session, user: user)
+      
+      expect(user.study_sessions).to include(study_session)
+    end
+    
+    it "ユーザー削除時に学習記録も削除される" do
+      user = create(:user)
+      create(:study_session, user: user)
+      
+      expect { user.destroy }.to change(StudySession, :count).by(-1)
+    end
+  end
 end

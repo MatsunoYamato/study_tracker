@@ -20,9 +20,30 @@
 #
 FactoryBot.define do
   factory :study_session do
-    user { nil }
-    duration { 1 }
-    studied_at { "2025-07-08 21:34:46" }
-    note { "MyText" }
+    user
+    duration { rand(15..180) }  # 15分〜3時間のランダム
+    studied_at { Faker::Time.between(from: 1.week.ago, to: Time.current) }
+    note { Faker::Lorem.paragraph }
+    
+    # 今日の学習記録
+    trait :today do
+      studied_at { Time.current }
+    end
+    
+    # ポモドーロセッション（25分）
+    trait :pomodoro do
+      duration { 25 }
+      note { "ポモドーロで集中学習" }
+    end
+    
+    # タグ付きの学習記録
+    trait :with_tags do
+      after(:create) do |study_session|
+        tags = create_list(:tag, 2, name: "Tag#{rand(1000)}")
+        tags.each do |tag|
+          create(:study_session_tag, study_session: study_session, tag: tag)
+        end
+      end
+    end
   end
 end
