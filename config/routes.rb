@@ -19,6 +19,10 @@ Rails.application.routes.draw do
   # タグ管理のRESTfulルート
   resources :tags
   
+  # ポモドーロタイマー
+  get 'pomodoro', to: 'pomodoro#index'
+  post 'pomodoro/save_session', to: 'pomodoro#save_session'
+  
   # ダッシュボード
   get 'dashboard', to: 'study_sessions#dashboard'
   

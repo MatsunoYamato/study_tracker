@@ -23,6 +23,8 @@
                     class: "text-gray-700 hover:text-blue-600 transition-colors #{'text-blue-600 font-semibold' if current_page?(study_sessions_path)}" %>
         <%= link_to "タグ管理", tags_path, 
                     class: "text-gray-700 hover:text-blue-600 transition-colors #{'text-blue-600 font-semibold' if current_page?(tags_path)}" %>
+        <%= link_to "ポモドーロ", pomodoro_path, 
+                    class: "text-gray-700 hover:text-blue-600 transition-colors #{'text-blue-600 font-semibold' if current_page?(pomodoro_path)}" %>
         <%= link_to "記録を追加", new_study_session_path, 
                     class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" %>
       </div>
@@ -47,7 +49,7 @@
                           class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" %>
               <div class="border-t border-gray-200 my-2"></div>
               <%= link_to "ログアウト", destroy_user_session_path, 
-                          method: :delete, 
+                          data: { "turbo-method": :delete }, 
                           class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" %>
             </div>
           </div>
@@ -71,6 +73,8 @@
         <%= link_to "学習記録", study_sessions_path, 
                     class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
         <%= link_to "タグ管理", tags_path, 
+                    class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
+        <%= link_to "ポモドーロ", pomodoro_path, 
                     class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>
         <%= link_to "記録を追加", new_study_session_path, 
                     class: "text-gray-700 hover:text-blue-600 transition-colors py-2" %>

@@ -108,7 +108,7 @@
   </div>
 
   <%# 検索結果の表示 %>
-  <% if @search_params.any? { |k, v| v.present? } %>
+  <% if @search_params.values.any?(&:present?) %>
     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
       <div class="flex items-center space-x-2">
         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -155,11 +155,13 @@
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="text-sm font-medium text-gray-900">
-                    <%= session.duration_in_hours %>時間
+                    <%= session.formatted_duration %>
                   </div>
-                  <div class="text-sm text-gray-500">
-                    (<%= session.duration %>分)
-                  </div>
+                  <% if session.duration >= 60 %>
+                    <div class="text-sm text-gray-500">
+                      (<%= session.duration %>分)
+                    </div>
+                  <% end %>
                 </td>
                 <td class="px-6 py-4">
                   <div class="flex flex-wrap gap-2">
@@ -239,7 +241,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // 詳細検索の項目に値が入っている場合は初期表示で開く
-  const hasAdvancedParams = <%= @search_params.slice(:date_from, :date_to, :duration_min, :duration_max, :tag_ids).any? { |k, v| v.present? } %>;
+  const hasAdvancedParams = <%= [@search_params[:date_from], @search_params[:date_to], @search_params[:duration_min], @search_params[:duration_max], @search_params[:tag_ids]].compact.any?(&:present?) %>;
   if (hasAdvancedParams) {
     advancedSearch.classList.remove('hidden');
     toggleText.textContent = '詳細検索を閉じる';

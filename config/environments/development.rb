@@ -77,9 +77,12 @@ Rails.application.configure do
   # N+1問題検出の設定
   config.after_initialize do
     Bullet.enable = true
-    Bullet.alert = true
+    Bullet.alert = false # アラート表示を無効化（ポモドーロ画面のアラート問題解決）
     Bullet.bullet_logger = true
     Bullet.console = true
     Bullet.rails_logger = true
+    
+    # 特定のケースでのeager loading警告を抑制
+    Bullet.add_safelist type: :unused_eager_loading, class_name: "StudySession", association: :study_session_tags
   end
 end

@@ -1,9 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 
 <head>
-    <title>StudyTracker</title>
+    <title><%= dynamic_page_title %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="description" content="<%= meta_description %>">
+    <meta charset="UTF-8">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:title" content="<%= dynamic_page_title %>">
+    <meta property="og:description" content="<%= meta_description %>">
+    <% if og_image_url %>
+      <meta property="og:image" content="<%= og_image_url %>">
+    <% end %>
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<%= request.original_url %>">
+    <meta property="twitter:title" content="<%= dynamic_page_title %>">
+    <meta property="twitter:description" content="<%= meta_description %>">
+    <% if og_image_url %>
+      <meta property="twitter:image" content="<%= og_image_url %>">
+    <% end %>
+    
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>

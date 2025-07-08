@@ -38,4 +38,14 @@ class StudySession < ApplicationRecord
   def duration_in_hours
     duration / 60.0
   end
+
+  # 表示用の学習時間フォーマット
+  def formatted_duration
+    if duration < 60
+      "#{duration}分"
+    else
+      hours = duration / 60.0
+      "#{hours.round(1)}時間"
+    end
+  end
 end

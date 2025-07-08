@@ -24,9 +24,11 @@
         <div class="ml-4">
           <p class="text-sm text-gray-600">今日の学習時間</p>
           <p class="text-2xl font-semibold text-gray-900">
-            <%= (@today_total_minutes / 60.0).round(1) %>時間
+            <%= format_duration_minutes(@today_total_minutes) %>
           </p>
-          <p class="text-sm text-gray-500">(<%= @today_total_minutes %>分)</p>
+          <% if @today_total_minutes >= 60 %>
+            <p class="text-sm text-gray-500">(<%= @today_total_minutes %>分)</p>
+          <% end %>
         </div>
       </div>
     </div>
@@ -43,9 +45,11 @@
         <div class="ml-4">
           <p class="text-sm text-gray-600">今週の学習時間</p>
           <p class="text-2xl font-semibold text-gray-900">
-            <%= (@week_total_minutes / 60.0).round(1) %>時間
+            <%= format_duration_minutes(@week_total_minutes) %>
           </p>
-          <p class="text-sm text-gray-500">(<%= @week_total_minutes %>分)</p>
+          <% if @week_total_minutes >= 60 %>
+            <p class="text-sm text-gray-500">(<%= @week_total_minutes %>分)</p>
+          <% end %>
         </div>
       </div>
     </div>
@@ -72,12 +76,11 @@
   <div class="bg-orange-50 p-6 rounded-lg shadow-md mb-8">
     <div class="flex items-center justify-between">
       <div>
-        <h3 class="text-lg font-semibold text-orange-800">ポモドーロセッション</h3>
-        <p class="text-orange-600">25分の学習記録を素早く追加</p>
+        <h3 class="text-lg font-semibold text-orange-800">ポモドーロタイマー</h3>
+        <p class="text-orange-600">25分の集中学習を始めましょう</p>
       </div>
-      <%= button_to "25分記録する", quick_record_study_sessions_path, 
-                    method: :patch, 
-                    class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors" %>
+      <%= link_to "ポモドーロを開始", pomodoro_path, 
+                  class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors" %>
     </div>
   </div>
 
@@ -92,7 +95,7 @@
               <div class="flex-1">
                 <div class="flex items-center space-x-2">
                   <p class="font-medium text-gray-900">
-                    <%= session.duration_in_hours %>時間
+                    <%= session.formatted_duration %>
                   </p>
                   <span class="text-gray-500">•</span>
                   <p class="text-sm text-gray-600">
@@ -139,7 +142,7 @@
                 <span class="font-medium text-gray-900"><%= tag_name %></span>
               </div>
               <span class="text-sm text-gray-600">
-                <%= (minutes / 60.0).round(1) %>時間
+                <%= format_duration_minutes(minutes) %>
               </span>
             </div>
           <% end %>

@@ -12,7 +12,7 @@
 #
 FactoryBot.define do
   factory :tag do
-    name { Faker::ProgrammingLanguage.name }
+    sequence(:name) { |n| "#{Faker::ProgrammingLanguage.name}#{n}" }
     description { Faker::Lorem.sentence }
     color { "##{Faker::Color.hex_color.delete('#').upcase}" }
     is_preset { false }
