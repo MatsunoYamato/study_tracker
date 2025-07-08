@@ -1,0 +1,144 @@
+<%# タグ詳細画面 %>
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex justify-between items-start mb-6">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center" 
+               style="background-color: <%= @tag.color %>20;">
+            <div class="w-6 h-6 rounded-full" style="background-color: <%= @tag.color %>;"></div>
+          </div>
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900"><%= @tag.name %></h1>
+            <% if @tag.description.present? %>
+              <p class="text-gray-600 mt-1"><%= @tag.description %></p>
+            <% end %>
+            <p class="text-sm text-gray-500 mt-1">
+              <%= @tag.is_preset? ? "プリセットタグ" : "マイタグ" %>
+            </p>
+          </div>
+        </div>
+        
+        <div class="flex space-x-2">
+          <%= link_to "一覧に戻る", tags_path, 
+                      class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+          <% unless @tag.is_preset? %>
+            <%= link_to "編集", edit_tag_path(@tag), 
+                        class: "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+          <% end %>
+        </div>
+      </div>
+
+      <%# 統計情報 %>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="p-2 bg-blue-100 rounded-full">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 4h4m-4 4h4m-4-8h4"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-blue-600">使用回数</p>
+              <p class="text-2xl font-semibold text-blue-800"><%= @total_sessions %></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-green-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="p-2 bg-green-100 rounded-full">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-green-600">合計時間</p>
+              <p class="text-2xl font-semibold text-green-800">
+                <%= (@total_duration / 60.0).round(1) %>時間
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-purple-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="p-2 bg-purple-100 rounded-full">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-purple-600">平均時間</p>
+              <p class="text-2xl font-semibold text-purple-800">
+                <%= @average_duration %>分
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%# 最近の学習記録 %>
+      <div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">このタグの学習記録</h2>
+        <% if @study_sessions.any? %>
+          <div class="bg-gray-50 rounded-lg overflow-hidden">
+            <div class="divide-y divide-gray-200">
+              <% @study_sessions.each do |session| %>
+                <div class="p-4 hover:bg-gray-100 transition-colors">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center space-x-4">
+                        <div class="text-sm text-gray-500">
+                          <%= session.studied_at.strftime("%m/%d %H:%M") %>
+                        </div>
+                        <div class="font-medium text-gray-900">
+                          <%= session.duration_in_hours %>時間
+                        </div>
+                        <div class="flex space-x-2">
+                          <% session.tags.each do |tag| %>
+                            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium" 
+                                  style="background-color: <%= tag.color %>20; color: <%= tag.color %>;">
+                              <%= tag.name %>
+                            </span>
+                          <% end %>
+                        </div>
+                      </div>
+                      <% if session.note.present? %>
+                        <p class="text-sm text-gray-600 mt-2"><%= session.note %></p>
+                      <% end %>
+                    </div>
+                    <div class="flex space-x-2">
+                      <%= link_to "詳細", session, class: "text-blue-600 hover:text-blue-800 text-sm" %>
+                      <%= link_to "編集", edit_study_session_path(session), class: "text-green-600 hover:text-green-800 text-sm" %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+          
+          <% if @total_sessions > 20 %>
+            <div class="text-center mt-4">
+              <%= link_to "すべての記録を見る", study_sessions_path, 
+                          class: "text-blue-600 hover:text-blue-800 transition-colors" %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="text-center py-12 text-gray-500">
+            <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            </svg>
+            <p class="mb-4">このタグを使用した学習記録がありません</p>
+            <%= link_to "学習記録を作成", new_study_session_path, 
+                        class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -16,6 +16,9 @@ Rails.application.routes.draw do
     end
   end
   
+  # タグ管理のRESTfulルート
+  resources :tags
+  
   # ダッシュボード
   get 'dashboard', to: 'study_sessions#dashboard'
   
