@@ -38,6 +38,9 @@
               <button id="resume-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors hidden touch-manipulation">
                 再開
               </button>
+              <button id="finish-btn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors hidden touch-manipulation">
+                終了して記録
+              </button>
               <button id="reset-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold transition-colors touch-manipulation">
                 リセット
               </button>
@@ -210,6 +213,7 @@ function initPomodoroTimer() {
   const startBtn = document.getElementById('start-btn');
   const pauseBtn = document.getElementById('pause-btn');
   const resumeBtn = document.getElementById('resume-btn');
+  const finishBtn = document.getElementById('finish-btn');
   const resetBtn = document.getElementById('reset-btn');
   
   // フォーム関連
@@ -232,6 +236,7 @@ function initPomodoroTimer() {
   let remainingSeconds = totalSeconds;
   let isBreakTime = false;
   let isPaused = false;
+  let startTime = null; // タイマー開始時間を記録
   
   // Toast通知を表示する関数
   function showToast(message, type = 'info') {
@@ -286,6 +291,11 @@ function initPomodoroTimer() {
       clearInterval(window.pomodoroTimerInterval);
     }
     
+    // 開始時間を記録（作業時間のみ）
+    if (!isBreakTime && !startTime) {
+      startTime = new Date();
+    }
+    
     window.pomodoroTimerInterval = setInterval(function() {
       remainingSeconds--;
       console.log('残り時間:', remainingSeconds); // デバッグ用
@@ -298,7 +308,7 @@ function initPomodoroTimer() {
     }, 1000);
     
     isPaused = false;
-    showButtons(['pause', 'reset']);
+    showButtons(['pause', 'finish', 'reset']);
   }
   
   // タイマー一時停止
@@ -308,13 +318,13 @@ function initPomodoroTimer() {
       window.pomodoroTimerInterval = null;
     }
     isPaused = true;
-    showButtons(['resume', 'reset']);
+    showButtons(['resume', 'finish', 'reset']);
   }
   
   // タイマー再開
   function resumeTimer() {
     startTimer();
-    showButtons(['pause', 'reset']);
+    showButtons(['pause', 'finish', 'reset']);
   }
   
   // タイマーリセット
@@ -335,10 +345,40 @@ function initPomodoroTimer() {
       remainingSeconds = totalSeconds;
     }
     
+    // 開始時間もリセット
+    startTime = null;
     isPaused = false;
     updateDisplay();
     showButtons(['start']);
     sessionForm.classList.add('hidden');
+  }
+
+  // タイマー途中終了（実際の経過時間で記録）
+  function finishTimer() {
+    if (window.pomodoroTimerInterval) {
+      clearInterval(window.pomodoroTimerInterval);
+      window.pomodoroTimerInterval = null;
+    }
+    
+    if (!isBreakTime && startTime) {
+      // 実際の経過時間を計算（分単位）
+      const currentTime = new Date();
+      const elapsedMinutes = Math.round((currentTime - startTime) / (1000 * 60));
+      
+      // フォームに実際の時間を設定
+      const durationField = document.querySelector('#save-session-form input[name="duration"]');
+      if (durationField) {
+        durationField.value = Math.max(1, elapsedMinutes); // 最低1分
+      }
+      
+      // セッション保存フォームを表示
+      sessionForm.classList.remove('hidden');
+      showButtons(['reset']);
+      
+      showToast(`${elapsedMinutes}分間のセッションが完了しました！`, 'success');
+    } else {
+      showToast('記録できる学習時間がありません', 'warning');
+    }
   }
   
   // タイマー完了時の処理
@@ -377,7 +417,7 @@ function initPomodoroTimer() {
   
   // ボタン表示の制御
   function showButtons(buttons) {
-    [startBtn, pauseBtn, resumeBtn].forEach(btn => btn.classList.add('hidden'));
+    [startBtn, pauseBtn, resumeBtn, finishBtn].forEach(btn => btn.classList.add('hidden'));
     
     buttons.forEach(button => {
       switch(button) {
@@ -390,6 +430,11 @@ function initPomodoroTimer() {
         case 'resume':
           resumeBtn.classList.remove('hidden');
           break;
+        case 'finish':
+          if (!isBreakTime) { // 作業時間のみ表示
+            finishBtn.classList.remove('hidden');
+          }
+          break;
       }
     });
   }
@@ -399,6 +444,7 @@ function initPomodoroTimer() {
     totalSeconds = 5 * 60; // 5分
     remainingSeconds = totalSeconds;
     isBreakTime = true;
+    startTime = null; // 開始時間をリセット
     timerStatus.textContent = '休憩時間';
     updateDisplay();
     sessionForm.classList.add('hidden');
@@ -409,6 +455,7 @@ function initPomodoroTimer() {
   startBtn.addEventListener('click', startTimer);
   pauseBtn.addEventListener('click', pauseTimer);
   resumeBtn.addEventListener('click', resumeTimer);
+  finishBtn.addEventListener('click', finishTimer);
   resetBtn.addEventListener('click', resetTimer);
   
   // セッション保存スキップ

@@ -34,10 +34,18 @@
         <div class="relative group">
           <button class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors">
             <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
+              <% if current_user.profile_image.present? %>
+                <% if current_user.profile_image.match(/^\p{Emoji}+$/) %>
+                  <span class="text-lg"><%= current_user.profile_image %></span>
+                <% else %>
+                  <div class="w-8 h-8 rounded-full bg-center bg-cover" style="background-image: url('<%= current_user.profile_image %>')"></div>
+                <% end %>
+              <% else %>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              <% end %>
             </div>
             <span class="hidden sm:block"><%= current_user.email %></span>
           </button>

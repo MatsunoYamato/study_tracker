@@ -83,6 +83,12 @@ class StudySessionsController < ApplicationController
                             .joins(:tags)
                             .group('tags.name', 'tags.color')
                             .sum(:duration)
+    
+    # グラフ用データ（過去7日間の学習時間）
+    @weekly_chart_data = prepare_weekly_chart_data
+    
+    # グラフ用データ（過去30日間の学習時間）
+    @monthly_chart_data = prepare_monthly_chart_data
   end
 
   # PATCH /study_sessions/quick_record
@@ -182,5 +188,45 @@ class StudySessionsController < ApplicationController
   # 検索パラメータ
   def search_params
     params.permit(:date_from, :date_to, :keyword, :duration_min, :duration_max, :sort, tag_ids: [])
+  end
+  
+  # グラフ用データ準備（過去7日間）
+  def prepare_weekly_chart_data
+    data = {}
+    labels = []
+    
+    7.downto(0) do |i|
+      date = i.days.ago.to_date
+      labels << date.strftime('%m/%d')
+      daily_minutes = current_user.study_sessions
+                                 .where(studied_at: date.beginning_of_day..date.end_of_day)
+                                 .sum(:duration)
+      data[date.strftime('%m/%d')] = daily_minutes
+    end
+    
+    {
+      labels: labels,
+      data: labels.map { |label| data[label] || 0 }
+    }
+  end
+  
+  # グラフ用データ準備（過去30日間）
+  def prepare_monthly_chart_data
+    data = {}
+    labels = []
+    
+    29.downto(0) do |i|
+      date = i.days.ago.to_date
+      labels << date.strftime('%m/%d')
+      daily_minutes = current_user.study_sessions
+                                 .where(studied_at: date.beginning_of_day..date.end_of_day)
+                                 .sum(:duration)
+      data[date.strftime('%m/%d')] = daily_minutes
+    end
+    
+    {
+      labels: labels,
+      data: labels.map { |label| data[label] || 0 }
+    }
   end
 end

@@ -2,18 +2,22 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
-# プリセットタグを作成
+# プリセットタグを作成（一般的な学習カテゴリ）
 preset_tags = [
-  { name: 'Ruby', color: '#CC342D', description: 'Ruby言語の学習' },
-  { name: 'Rails', color: '#D30001', description: 'Ruby on Railsの学習' },
-  { name: 'JavaScript', color: '#F7DF1E', description: 'JavaScriptの学習' },
-  { name: 'HTML/CSS', color: '#E34F26', description: 'HTMLとCSSの学習' },
-  { name: 'データベース', color: '#336791', description: 'SQLやデータベースの学習' },
-  { name: 'アルゴリズム', color: '#4CAF50', description: 'アルゴリズムと数学の学習' },
-  { name: '英語', color: '#2196F3', description: '英語の学習' },
-  { name: '読書', color: '#795548', description: '技術書や専門書の読書' },
-  { name: 'ポモドーロ', color: '#FF9800', description: 'ポモドーロテクニックでの学習' },
-  { name: '復習', color: '#9C27B0', description: '学習内容の復習' }
+  { name: 'プログラミング', color: '#4F46E5', description: 'プログラミング全般の学習' },
+  { name: '英語', color: '#DC2626', description: '英語の学習（TOEIC、英会話など）' },
+  { name: '資格勉強', color: '#059669', description: '各種資格試験の勉強' },
+  { name: '数学', color: '#7C3AED', description: '数学の学習' },
+  { name: '読書', color: '#B45309', description: '本・論文の読書' },
+  { name: '語学', color: '#0891B2', description: '外国語の学習' },
+  { name: 'ビジネス', color: '#DC2626', description: 'ビジネススキルの学習' },
+  { name: 'デザイン', color: '#EC4899', description: 'デザイン・アートの学習' },
+  { name: '音楽', color: '#F59E0B', description: '楽器練習・音楽理論の学習' },
+  { name: '健康・運動', color: '#10B981', description: '健康管理・運動の学習' },
+  { name: '料理', color: '#EF4444', description: '料理・栄養学の学習' },
+  { name: '研究', color: '#6366F1', description: '学術研究・論文作成' },
+  { name: '復習', color: '#8B5CF6', description: '学習内容の復習・反復練習' },
+  { name: 'その他', color: '#6B7280', description: 'その他の学習活動' }
 ]
 
 puts "プリセットタグを作成中..."

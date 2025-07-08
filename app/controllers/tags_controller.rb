@@ -41,10 +41,7 @@ class TagsController < ApplicationController
 
   # GET /tags/1/edit
   def edit
-    # プリセットタグは編集不可
-    if @tag.is_preset?
-      redirect_to tags_path, alert: 'プリセットタグは編集できません。'
-    end
+    # 全てのタグが編集可能
   end
 
   # POST /tags
@@ -61,12 +58,6 @@ class TagsController < ApplicationController
 
   # PATCH/PUT /tags/1
   def update
-    # プリセットタグは更新不可
-    if @tag.is_preset?
-      redirect_to tags_path, alert: 'プリセットタグは編集できません。'
-      return
-    end
-    
     if @tag.update(tag_params)
       redirect_to @tag, notice: 'タグが更新されました。'
     else
@@ -76,12 +67,6 @@ class TagsController < ApplicationController
 
   # DELETE /tags/1
   def destroy
-    # プリセットタグは削除不可
-    if @tag.is_preset?
-      redirect_to tags_path, alert: 'プリセットタグは削除できません。'
-      return
-    end
-    
     # タグを使用している学習記録がある場合の確認
     usage_count = current_user.study_sessions.joins(:tags).where(tags: { id: @tag.id }).count
     
