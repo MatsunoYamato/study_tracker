@@ -191,7 +191,7 @@
                     <%= link_to "削除", session, 
                                 data: { 
                                   "turbo-method": :delete,
-                                  confirm: "本当に削除しますか？" 
+                                  "turbo-confirm": "本当に削除しますか？" 
                                 },
                                 class: "text-red-600 hover:text-red-800 transition-colors" %>
                   </div>
@@ -224,7 +224,7 @@
               <%= link_to "削除", session, 
                           data: { 
                             "turbo-method": :delete,
-                            confirm: "本当に削除しますか？" 
+                            "turbo-confirm": "本当に削除しますか？" 
                           },
                           class: "text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-200 hover:bg-red-50" %>
             </div>
@@ -273,11 +273,13 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+function initializeSearchToggle() {
   const toggleBtn = document.getElementById('toggle-search');
   const toggleText = document.getElementById('toggle-text');
   const toggleIcon = document.getElementById('toggle-icon');
   const advancedSearch = document.getElementById('advanced-search');
+  
+  if (!toggleBtn || !toggleText || !toggleIcon || !advancedSearch) return;
   
   toggleBtn.addEventListener('click', function() {
     if (advancedSearch.classList.contains('hidden')) {
@@ -294,11 +296,15 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // 詳細検索の項目に値が入っている場合は初期表示で開く
-  const hasAdvancedParams = <%= [@search_params[:date_from], @search_params[:date_to], @search_params[:duration_min], @search_params[:duration_max], @search_params[:tag_ids]].compact.any?(&:present?) %>;
+  <% has_advanced_params = [@search_params[:date_from], @search_params[:date_to], @search_params[:duration_min], @search_params[:duration_max]].any?(&:present?) %>
+  const hasAdvancedParams = <%= has_advanced_params %>;
   if (hasAdvancedParams) {
     advancedSearch.classList.remove('hidden');
     toggleText.textContent = '詳細検索を閉じる';
     toggleIcon.classList.add('rotate-180');
   }
-});
+}
+
+document.addEventListener('DOMContentLoaded', initializeSearchToggle);
+document.addEventListener('turbo:load', initializeSearchToggle);
 </script>

@@ -180,10 +180,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const ctx = document.getElementById('studyChart').getContext('2d');
+function initializeDashboardChart() {
+  const ctx = document.getElementById('studyChart');
+  if (!ctx) return;
+  
   const weeklyTab = document.getElementById('weekly-tab');
   const monthlyTab = document.getElementById('monthly-tab');
+  
+  // 既存のチャートがある場合は破棄
+  if (window.studyChart) {
+    window.studyChart.destroy();
+  }
   
   // データの準備
   const weeklyData = {
@@ -280,12 +287,12 @@ document.addEventListener('DOMContentLoaded', function() {
   };
   
   // チャートを作成
-  const studyChart = new Chart(ctx, chartConfig);
+  window.studyChart = new Chart(ctx, chartConfig);
   
   // タブ切り替え機能
   weeklyTab.addEventListener('click', function() {
-    studyChart.data = weeklyData;
-    studyChart.update();
+    window.studyChart.data = weeklyData;
+    window.studyChart.update();
     
     weeklyTab.classList.remove('bg-gray-200', 'text-gray-700');
     weeklyTab.classList.add('bg-blue-500', 'text-white');
@@ -294,13 +301,26 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   monthlyTab.addEventListener('click', function() {
-    studyChart.data = monthlyData;
-    studyChart.update();
+    window.studyChart.data = monthlyData;
+    window.studyChart.update();
     
     monthlyTab.classList.remove('bg-gray-200', 'text-gray-700');
     monthlyTab.classList.add('bg-blue-500', 'text-white');
     weeklyTab.classList.remove('bg-blue-500', 'text-white');
     weeklyTab.classList.add('bg-gray-200', 'text-gray-700');
   });
-});
+}
+
+// DOMContentLoadedとページの表示時の両方で実行
+document.addEventListener('DOMContentLoaded', initializeDashboardChart);
+document.addEventListener('turbo:load', initializeDashboardChart);
+document.addEventListener('turbo:frame-load', initializeDashboardChart);
+window.addEventListener('pageshow', initializeDashboardChart);
+
+// ページが表示された際に確実に実行
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeDashboardChart);
+} else {
+  initializeDashboardChart();
+}
 </script>

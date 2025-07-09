@@ -15,7 +15,7 @@
           <%= link_to "削除", @study_session, 
                       data: { 
                         "turbo-method": :delete,
-                        confirm: "本当に削除しますか？"
+                        "turbo-confirm": "本当に削除しますか？"
                       },
                       class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors" %>
         </div>
@@ -34,7 +34,7 @@
             <div class="ml-3">
               <p class="text-sm text-blue-600">学習時間</p>
               <p class="text-2xl font-semibold text-blue-800">
-                <%= @study_session.duration_in_hours %>時間
+                <%= @study_session.formatted_duration %>
               </p>
               <p class="text-sm text-blue-600">(<%= @study_session.duration %>分)</p>
             </div>
