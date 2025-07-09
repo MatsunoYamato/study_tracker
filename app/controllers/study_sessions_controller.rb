@@ -135,11 +135,21 @@ class StudySessionsController < ApplicationController
   def apply_filters(study_sessions)
     # 日付範囲での絞り込み
     if params[:date_from].present?
-      study_sessions = study_sessions.where('studied_at >= ?', Date.parse(params[:date_from]).beginning_of_day)
+      begin
+        date_from = Date.strptime(params[:date_from], '%Y-%m-%d')
+        study_sessions = study_sessions.where('studied_at >= ?', date_from.beginning_of_day)
+      rescue Date::Error
+        # 無効な日付の場合は無視
+      end
     end
     
     if params[:date_to].present?
-      study_sessions = study_sessions.where('studied_at <= ?', Date.parse(params[:date_to]).end_of_day)
+      begin
+        date_to = Date.strptime(params[:date_to], '%Y-%m-%d')
+        study_sessions = study_sessions.where('studied_at <= ?', date_to.end_of_day)
+      rescue Date::Error
+        # 無効な日付の場合は無視
+      end
     end
     
     # タグでの絞り込み

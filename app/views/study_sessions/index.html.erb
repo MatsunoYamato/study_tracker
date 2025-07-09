@@ -307,4 +307,12 @@ function initializeSearchToggle() {
 
 document.addEventListener('DOMContentLoaded', initializeSearchToggle);
 document.addEventListener('turbo:load', initializeSearchToggle);
+document.addEventListener('turbo:frame-load', initializeSearchToggle);
+
+// ページが表示された際に確実に実行
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeSearchToggle);
+} else {
+  initializeSearchToggle();
+}
 </script>

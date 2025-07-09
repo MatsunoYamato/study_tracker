@@ -44,8 +44,13 @@ class StudySession < ApplicationRecord
     if duration < 60
       "#{duration}分"
     else
-      hours = duration / 60.0
-      "#{hours.round(1)}時間"
+      hours = duration / 60
+      minutes = duration % 60
+      if minutes == 0
+        "#{hours}時間"
+      else
+        "#{hours}時間#{minutes}分"
+      end
     end
   end
 end

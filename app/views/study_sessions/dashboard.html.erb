@@ -13,9 +13,9 @@
   <%# 統計情報カード %>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <%# 今日の学習時間 %>
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <div class="flex items-center">
-        <div class="p-3 bg-blue-100 rounded-full">
+        <div class="p-3 bg-blue-100 rounded-full group-hover:bg-blue-200 transition-colors duration-300">
           <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -34,9 +34,9 @@
     </div>
 
     <%# 今週の学習時間 %>
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <div class="flex items-center">
-        <div class="p-3 bg-green-100 rounded-full">
+        <div class="p-3 bg-green-100 rounded-full group-hover:bg-green-200 transition-colors duration-300">
           <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
@@ -55,9 +55,9 @@
     </div>
 
     <%# 総学習セッション数 %>
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <div class="flex items-center">
-        <div class="p-3 bg-purple-100 rounded-full">
+        <div class="p-3 bg-purple-100 rounded-full group-hover:bg-purple-200 transition-colors duration-300">
           <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M13 10V3L4 14h7v7l9-11h-7z"></path>
@@ -73,27 +73,27 @@
   </div>
 
   <%# クイック記録ボタン %>
-  <div class="bg-orange-50 p-6 rounded-lg shadow-md mb-8">
+  <div class="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-8">
     <div class="flex items-center justify-between">
       <div>
         <h3 class="text-lg font-semibold text-orange-800">ポモドーロタイマー</h3>
         <p class="text-orange-600">25分の集中学習を始めましょう</p>
       </div>
       <%= link_to "ポモドーロを開始", pomodoro_path, 
-                  class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors" %>
+                  class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" %>
     </div>
   </div>
 
   <%# 学習時間グラフ %>
-  <div class="bg-white p-6 rounded-lg shadow-md mb-8">
+  <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-8">
     <h2 class="text-xl font-semibold text-gray-900 mb-6">学習時間の推移</h2>
     
     <%# グラフ切り替えタブ %>
     <div class="flex space-x-4 mb-6">
-      <button id="weekly-tab" class="px-4 py-2 bg-blue-500 text-white rounded-lg transition-colors">
+      <button id="weekly-tab" class="px-4 py-2 bg-blue-500 text-white rounded-lg transition-all duration-300 transform hover:scale-105">
         過去7日間
       </button>
-      <button id="monthly-tab" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+      <button id="monthly-tab" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all duration-300 transform hover:scale-105">
         過去30日間
       </button>
     </div>
@@ -106,12 +106,12 @@
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
     <%# 最近の学習記録 %>
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">最近の学習記録</h2>
       <% if @recent_sessions.any? %>
         <div class="space-y-4">
           <% @recent_sessions.each do |session| %>
-            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
               <div class="flex-1">
                 <div class="flex items-center space-x-2">
                   <p class="font-medium text-gray-900">
@@ -127,7 +127,7 @@
                 <% end %>
                 <div class="flex space-x-2 mt-2">
                   <% session.tags.each do |tag| %>
-                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium" 
+                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium transition-transform duration-200 hover:scale-105" 
                           style="background-color: <%= tag.color %>20; color: <%= tag.color %>;">
                       <%= tag.name %>
                     </span>
@@ -135,8 +135,8 @@
                 </div>
               </div>
               <div class="flex space-x-2">
-                <%= link_to "詳細", session, class: "text-blue-600 hover:text-blue-800 text-sm" %>
-                <%= link_to "編集", edit_study_session_path(session), class: "text-green-600 hover:text-green-800 text-sm" %>
+                <%= link_to "詳細", session, class: "text-blue-600 hover:text-blue-800 text-sm transition-colors duration-200" %>
+                <%= link_to "編集", edit_study_session_path(session), class: "text-green-600 hover:text-green-800 text-sm transition-colors duration-200" %>
               </div>
             </div>
           <% end %>
@@ -151,7 +151,7 @@
     </div>
 
     <%# タグ別統計 %>
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">タグ別学習時間</h2>
       <% if @tag_stats.any? %>
         <div class="space-y-3">
