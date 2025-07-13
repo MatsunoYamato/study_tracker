@@ -1,12 +1,12 @@
 class TagsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_tag, only: [:show, :edit, :update, :destroy]
+  before_action :set_tag, only: %i[show edit update destroy]
 
   # GET /tags
   def index
     @preset_tags = Tag.preset.order(:name)
     @user_tags = Tag.user_created.order(:name)
-    
+
     # タグの使用統計を取得
     @tag_usage = current_user.study_sessions
                              .joins(:tags)
@@ -24,7 +24,7 @@ class TagsController < ApplicationController
                                   .recent
                                   .limit(20)
                                   .includes(:tags)
-    
+
     # 統計情報
     @total_sessions = @study_sessions.count
     @total_duration = current_user.study_sessions
@@ -47,8 +47,8 @@ class TagsController < ApplicationController
   # POST /tags
   def create
     @tag = Tag.new(tag_params)
-    @tag.is_preset = false  # ユーザー作成タグは常にfalse
-    
+    @tag.is_preset = false # ユーザー作成タグは常にfalse
+
     if @tag.save
       redirect_to @tag, notice: 'タグが作成されました。'
     else
@@ -69,12 +69,12 @@ class TagsController < ApplicationController
   def destroy
     # タグを使用している学習記録がある場合の確認
     usage_count = current_user.study_sessions.joins(:tags).where(tags: { id: @tag.id }).count
-    
+
     if usage_count > 0
       redirect_to @tag, alert: "このタグは#{usage_count}個の学習記録で使用されているため削除できません。"
       return
     end
-    
+
     @tag.destroy
     redirect_to tags_path, notice: 'タグが削除されました。'
   end

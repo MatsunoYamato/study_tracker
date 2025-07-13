@@ -29,7 +29,7 @@ RSpec.describe ApplicationHelper, type: :helper do
 
     it '大きな値でも正しく表示される' do
       expect(helper.format_duration_minutes(1440)).to eq('24.0時間') # 1日
-      expect(helper.format_duration_minutes(10080)).to eq('168.0時間') # 1週間
+      expect(helper.format_duration_minutes(10_080)).to eq('168.0時間') # 1週間
     end
   end
 end

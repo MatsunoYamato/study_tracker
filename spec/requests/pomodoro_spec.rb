@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Pomodoro", type: :request do
+RSpec.describe 'Pomodoro', type: :request do
   let(:user) { create(:user) }
   let(:tag) { create(:tag) }
 
@@ -8,7 +8,7 @@ RSpec.describe "Pomodoro", type: :request do
     sign_in user
   end
 
-  describe "GET /pomodoro" do
+  describe 'GET /pomodoro' do
     it '正常にレスポンスが返されること' do
       get pomodoro_path
       expect(response).to have_http_status(:success)
@@ -31,7 +31,7 @@ RSpec.describe "Pomodoro", type: :request do
     end
   end
 
-  describe "POST /pomodoro/save_session" do
+  describe 'POST /pomodoro/save_session' do
     let(:session_params) do
       {
         study_session: {
@@ -45,16 +45,16 @@ RSpec.describe "Pomodoro", type: :request do
 
     context '有効なパラメータの場合' do
       it 'セッションが作成されること' do
-        expect {
+        expect do
           post '/pomodoro/save_session', params: session_params
-        }.to change(StudySession, :count).by(1)
+        end.to change(StudySession, :count).by(1)
       end
 
       it '正しいJSONレスポンスが返されること' do
         post '/pomodoro/save_session', params: session_params
         expect(response).to have_http_status(:success)
         expect(response.content_type).to include('application/json')
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['status']).to eq('success')
         expect(json_response['message']).to eq('ポモドーロセッションを保存しました！')
@@ -85,15 +85,15 @@ RSpec.describe "Pomodoro", type: :request do
       end
 
       it 'セッションが作成されないこと' do
-        expect {
+        expect do
           post '/pomodoro/save_session', params: invalid_params
-        }.not_to change(StudySession, :count)
+        end.not_to change(StudySession, :count)
       end
 
       it 'エラーのJSONレスポンスが返されること' do
         post '/pomodoro/save_session', params: invalid_params
         expect(response).to have_http_status(:success)
-        
+
         json_response = JSON.parse(response.body)
         expect(json_response['status']).to eq('error')
         expect(json_response['message']).to be_present

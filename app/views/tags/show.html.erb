@@ -1,7 +1,7 @@
 <%# タグ詳細画面 %>
 <div class="container mx-auto px-4 py-8">
   <div class="max-w-4xl mx-auto">
-    <div class="bg-white rounded-lg shadow-md p-6">
+    <div class="bg-gray-100 rounded-lg shadow-md p-6">
       <div class="flex justify-between items-start mb-6">
         <div class="flex items-center space-x-4">
           <div class="w-12 h-12 rounded-full flex items-center justify-center" 
@@ -62,7 +62,7 @@
             <div class="ml-3">
               <p class="text-sm text-green-600">合計時間</p>
               <p class="text-2xl font-semibold text-green-800">
-                <%= (@total_duration / 60.0).round(1) %>時間
+                <%= format_duration_minutes(@total_duration) %>
               </p>
             </div>
           </div>
@@ -101,7 +101,7 @@
                           <%= session.studied_at.strftime("%m/%d %H:%M") %>
                         </div>
                         <div class="font-medium text-gray-900">
-                          <%= session.duration_in_hours %>時間
+                          <%= format_duration_minutes(session.duration) %>
                         </div>
                         <div class="flex space-x-2">
                           <% session.tags.each do |tag| %>

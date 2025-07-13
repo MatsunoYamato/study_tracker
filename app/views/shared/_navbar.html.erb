@@ -1,39 +1,38 @@
 <%# ナビゲーションバー %>
-<nav class="bg-white shadow-lg border-b border-gray-100 sticky top-0 z-50">
+<nav class="bg-slate-900 shadow-lg border-b border-slate-700 sticky top-0 z-50">
   <div class="container mx-auto px-4">
     <div class="flex justify-between items-center h-16">
       <%# ロゴ・アプリ名 %>
       <div class="flex items-center space-x-4">
         <%= link_to root_path, class: "flex items-center space-x-3 hover:opacity-80 transition-opacity" do %>
-          <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-sm">
-            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <div class="w-9 h-9 bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg flex items-center justify-center shadow-lg">
+            <svg class="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
             </svg>
           </div>
-          <span class="text-xl font-bold text-gray-900">StudyTracker</span>
+          <span class="text-xl font-bold text-white">DevLogger</span>
         <% end %>
       </div>
 
       <%# ナビゲーションメニュー %>
       <div class="hidden md:flex items-center space-x-6">
         <%= link_to "ダッシュボード", dashboard_path, 
-                    class: "text-gray-600 hover:text-blue-600 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-blue-50 #{'text-blue-600 bg-blue-50' if current_page?(dashboard_path)}" %>
+                    class: "text-slate-300 hover:text-emerald-400 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-slate-800 #{'text-emerald-400 bg-slate-800' if current_page?(dashboard_path)}" %>
         <%= link_to "学習記録", study_sessions_path, 
-                    class: "text-gray-600 hover:text-blue-600 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-blue-50 #{'text-blue-600 bg-blue-50' if current_page?(study_sessions_path)}" %>
+                    class: "text-slate-300 hover:text-emerald-400 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-slate-800 #{'text-emerald-400 bg-slate-800' if current_page?(study_sessions_path)}" %>
         <%= link_to "タグ管理", tags_path, 
-                    class: "text-gray-600 hover:text-blue-600 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-blue-50 #{'text-blue-600 bg-blue-50' if current_page?(tags_path)}" %>
+                    class: "text-slate-300 hover:text-emerald-400 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-slate-800 #{'text-emerald-400 bg-slate-800' if current_page?(tags_path)}" %>
         <%= link_to "ポモドーロ", pomodoro_path, 
-                    class: "text-gray-600 hover:text-blue-600 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-blue-50 #{'text-blue-600 bg-blue-50' if current_page?(pomodoro_path)}" %>
+                    class: "text-slate-300 hover:text-emerald-400 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-slate-800 #{'text-emerald-400 bg-slate-800' if current_page?(pomodoro_path)}" %>
         <%= link_to "記録を追加", new_study_session_path, 
-                    class: "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg font-medium" %>
+                    class: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg font-medium" %>
       </div>
 
       <%# ユーザーメニュー %>
       <div class="flex items-center space-x-4">
         <div class="relative group">
-          <button class="flex items-center space-x-2 text-gray-700 hover:text-blue-600 transition-colors">
-            <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden">
+          <button class="flex items-center space-x-2 text-slate-300 hover:text-emerald-400 transition-colors">
+            <div class="w-8 h-8 bg-slate-700 rounded-full flex items-center justify-center overflow-hidden">
               <% if current_user.avatar.attached? %>
                 <%= image_tag current_user.avatar, 
                              class: "w-8 h-8 object-cover rounded-full",
@@ -49,21 +48,21 @@
           </button>
           
           <%# ドロップダウンメニュー %>
-          <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+          <div class="absolute right-0 mt-2 w-48 bg-slate-800 rounded-lg shadow-lg border border-slate-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
             <div class="py-2">
               <%= link_to "プロフィール", edit_user_registration_path, 
-                          class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" %>
-              <div class="border-t border-gray-200 my-2"></div>
+                          class: "block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-emerald-400 transition-colors" %>
+              <div class="border-t border-slate-700 my-2"></div>
               <%= link_to "ログアウト", destroy_user_session_path, 
                           data: { "turbo-method": :delete }, 
-                          class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" %>
+                          class: "block px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-emerald-400 transition-colors" %>
             </div>
           </div>
         </div>
 
         <%# モバイルメニューボタン %>
         <button id="mobile-menu-button" 
-                class="md:hidden text-gray-700 hover:text-blue-600 transition-colors p-2 rounded-lg hover:bg-gray-100"
+                class="md:hidden text-slate-300 hover:text-emerald-400 transition-colors p-2 rounded-lg hover:bg-slate-800"
                 aria-expanded="false"
                 aria-label="メニューを開く">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,25 +74,25 @@
     </div>
 
     <%# モバイルメニュー %>
-    <div id="mobile-menu" class="md:hidden hidden border-t border-gray-200 bg-white">
+    <div id="mobile-menu" class="md:hidden hidden border-t border-slate-700 bg-slate-900">
       <div class="px-4 py-4 space-y-1">
         <%= link_to "ダッシュボード", dashboard_path, 
-                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(dashboard_path)}" %>
+                    class: "block px-3 py-2 rounded-lg text-slate-300 hover:text-emerald-400 hover:bg-slate-800 transition-colors #{'bg-slate-800 text-emerald-400' if current_page?(dashboard_path)}" %>
         <%= link_to "学習記録", study_sessions_path, 
-                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(study_sessions_path)}" %>
+                    class: "block px-3 py-2 rounded-lg text-slate-300 hover:text-emerald-400 hover:bg-slate-800 transition-colors #{'bg-slate-800 text-emerald-400' if current_page?(study_sessions_path)}" %>
         <%= link_to "タグ管理", tags_path, 
-                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(tags_path)}" %>
+                    class: "block px-3 py-2 rounded-lg text-slate-300 hover:text-emerald-400 hover:bg-slate-800 transition-colors #{'bg-slate-800 text-emerald-400' if current_page?(tags_path)}" %>
         <%= link_to "ポモドーロ", pomodoro_path, 
-                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors #{'bg-blue-50 text-blue-600' if current_page?(pomodoro_path)}" %>
-        <div class="border-t border-gray-200 my-2"></div>
+                    class: "block px-3 py-2 rounded-lg text-slate-300 hover:text-emerald-400 hover:bg-slate-800 transition-colors #{'bg-slate-800 text-emerald-400' if current_page?(pomodoro_path)}" %>
+        <div class="border-t border-slate-700 my-2"></div>
         <%= link_to "記録を追加", new_study_session_path, 
-                    class: "block bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-lg transition-colors text-center font-medium" %>
-        <div class="border-t border-gray-200 my-2"></div>
+                    class: "block bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-2 rounded-lg transition-colors text-center font-medium" %>
+        <div class="border-t border-slate-700 my-2"></div>
         <%= link_to "プロフィール", edit_user_registration_path, 
-                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors" %>
+                    class: "block px-3 py-2 rounded-lg text-slate-300 hover:text-emerald-400 hover:bg-slate-800 transition-colors" %>
         <%= link_to "ログアウト", destroy_user_session_path, 
                     data: { "turbo-method": :delete }, 
-                    class: "block px-3 py-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors" %>
+                    class: "block px-3 py-2 rounded-lg text-slate-300 hover:text-emerald-400 hover:bg-slate-800 transition-colors" %>
       </div>
     </div>
   </div>

@@ -1,10 +1,10 @@
 <%# ダッシュボード画面 - 学習記録アプリのメイン画面 %>
 <div class="container mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">学習ダッシュボード</h1>
+    <h1 class="text-3xl font-bold text-white">学習ダッシュボード</h1>
     <div class="flex space-x-4">
       <%= link_to "記録を追加", new_study_session_path, 
-                  class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+                  class: "bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors" %>
       <%= link_to "全記録を見る", study_sessions_path, 
                   class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors" %>
     </div>
@@ -13,10 +13,10 @@
   <%# 統計情報カード %>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     <%# 今日の学習時間 %>
-    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <div class="flex items-center">
-        <div class="p-3 bg-blue-100 rounded-full group-hover:bg-blue-200 transition-colors duration-300">
-          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="p-3 bg-emerald-500/20 rounded-full group-hover:bg-emerald-500/30 transition-colors duration-300">
+          <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
@@ -34,10 +34,10 @@
     </div>
 
     <%# 今週の学習時間 %>
-    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <div class="flex items-center">
-        <div class="p-3 bg-green-100 rounded-full group-hover:bg-green-200 transition-colors duration-300">
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="p-3 bg-emerald-500/20 rounded-full group-hover:bg-emerald-500/30 transition-colors duration-300">
+          <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
           </svg>
@@ -55,10 +55,10 @@
     </div>
 
     <%# 総学習セッション数 %>
-    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <div class="flex items-center">
-        <div class="p-3 bg-purple-100 rounded-full group-hover:bg-purple-200 transition-colors duration-300">
-          <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="p-3 bg-emerald-500/20 rounded-full group-hover:bg-emerald-500/30 transition-colors duration-300">
+          <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                   d="M13 10V3L4 14h7v7l9-11h-7z"></path>
           </svg>
@@ -73,19 +73,19 @@
   </div>
 
   <%# クイック記録ボタン %>
-  <div class="bg-gradient-to-r from-orange-50 to-red-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-8">
+  <div class="bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-8 border border-emerald-500/20">
     <div class="flex items-center justify-between">
       <div>
-        <h3 class="text-lg font-semibold text-orange-800">ポモドーロタイマー</h3>
-        <p class="text-orange-600">25分の集中学習を始めましょう</p>
+        <h3 class="text-lg font-semibold text-emerald-300">ポモドーロタイマー</h3>
+        <p class="text-emerald-400">25分の集中学習を始めましょう</p>
       </div>
       <%= link_to "ポモドーロを開始", pomodoro_path, 
-                  class: "bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" %>
+                  class: "bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" %>
     </div>
   </div>
 
   <%# 学習時間グラフ %>
-  <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-8">
+  <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 mb-8">
     <h2 class="text-xl font-semibold text-gray-900 mb-6">学習時間の推移</h2>
     
     <%# グラフ切り替えタブ %>
@@ -101,12 +101,18 @@
     <%# グラフコンテナ %>
     <div class="relative h-64">
       <canvas id="studyChart"></canvas>
+      <div id="chart-loading" class="absolute inset-0 flex items-center justify-center bg-gray-50 rounded">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
+          <p class="text-sm text-gray-600">グラフを読み込み中...</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
     <%# 最近の学習記録 %>
-    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">最近の学習記録</h2>
       <% if @recent_sessions.any? %>
         <div class="space-y-4">
@@ -145,13 +151,13 @@
         <div class="text-center py-8 text-gray-500">
           <p class="mb-4">学習記録がありません</p>
           <%= link_to "最初の記録を作成", new_study_session_path, 
-                      class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+                      class: "bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors" %>
         </div>
       <% end %>
     </div>
 
     <%# タグ別統計 %>
-    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">タグ別学習時間</h2>
       <% if @tag_stats.any? %>
         <div class="space-y-3">
@@ -177,22 +183,94 @@
 </div>
 
 <%# Chart.js %>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-function initializeDashboardChart() {
+// デバッグ用ログ機能
+function debugLog(message) {
+  console.log('[Chart Debug]', message);
+  // デバッグ情報をページに表示（開発環境のみ）
+  <% if Rails.env.development? %>
+  // デバッグ情報は開発環境でのみコンソールに出力
+  <% end %>
+}
+
+// エラー表示機能
+function showChartError(message) {
   const ctx = document.getElementById('studyChart');
+  const loadingDiv = document.getElementById('chart-loading');
+  
   if (!ctx) return;
+  
+  // ローディングを非表示
+  if (loadingDiv) {
+    loadingDiv.style.display = 'none';
+  }
+  
+  ctx.style.display = 'none';
+  
+  const errorDiv = document.createElement('div');
+  errorDiv.className = 'text-center py-8 text-gray-500';
+  errorDiv.innerHTML = `
+    <div class="mb-4">
+      <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+      </svg>
+    </div>
+    <p>${message}</p>
+  `;
+  
+  ctx.parentNode.appendChild(errorDiv);
+}
+
+let chartInitialized = false;
+let initializationInProgress = false;
+
+function initializeDashboardChart() {
+  debugLog('Chart initialization started');
+  
+  // 重複実行を防ぐ
+  if (chartInitialized || initializationInProgress) {
+    debugLog('Chart already initialized or initialization in progress, skipping');
+    return;
+  }
+  
+  initializationInProgress = true;
+  
+  // Chart.jsの存在確認
+  if (typeof Chart === 'undefined') {
+    debugLog('ERROR: Chart.js not loaded');
+    showChartError('Chart.jsライブラリが読み込まれていません。');
+    initializationInProgress = false;
+    return;
+  }
+  debugLog('Chart.js loaded successfully');
+  
+  const ctx = document.getElementById('studyChart');
+  if (!ctx) {
+    debugLog('ERROR: Canvas element not found');
+    showChartError('グラフ要素が見つかりません。');
+    initializationInProgress = false;
+    return;
+  }
+  debugLog('Canvas element found');
   
   const weeklyTab = document.getElementById('weekly-tab');
   const monthlyTab = document.getElementById('monthly-tab');
   
   // 既存のチャートがある場合は破棄
-  if (window.studyChart) {
-    window.studyChart.destroy();
+  if (window.studyChart && typeof window.studyChart.destroy === 'function') {
+    try {
+      window.studyChart.destroy();
+      debugLog('Previous chart destroyed');
+    } catch (error) {
+      debugLog('Error destroying previous chart: ' + error.message);
+    }
   }
+  window.studyChart = null;
   
   // データの準備
+  debugLog('Preparing chart data...');
   const weeklyData = {
     labels: <%= raw @weekly_chart_data[:labels].to_json %>,
     datasets: [{
@@ -287,40 +365,93 @@ function initializeDashboardChart() {
   };
   
   // チャートを作成
-  window.studyChart = new Chart(ctx, chartConfig);
+  debugLog('Creating chart with config...');
+  debugLog('Weekly labels: ' + JSON.stringify(weeklyData.labels));
+  debugLog('Weekly data: ' + JSON.stringify(weeklyData.datasets[0].data));
+  
+  try {
+    window.studyChart = new Chart(ctx, chartConfig);
+    debugLog('Chart created successfully');
+    chartInitialized = true;
+    initializationInProgress = false;
+    
+    // ローディング表示を非表示
+    const loadingDiv = document.getElementById('chart-loading');
+    if (loadingDiv) {
+      loadingDiv.style.display = 'none';
+    }
+  } catch (error) {
+    debugLog('ERROR creating chart: ' + error.message);
+    console.error('Chart creation error:', error);
+    showChartError('グラフの作成でエラーが発生しました。ページを再読み込みしてください。');
+    initializationInProgress = false;
+    return;
+  }
   
   // タブ切り替え機能
-  weeklyTab.addEventListener('click', function() {
-    window.studyChart.data = weeklyData;
-    window.studyChart.update();
+  if (weeklyTab && monthlyTab) {
+    weeklyTab.addEventListener('click', function() {
+      debugLog('Weekly tab clicked');
+      window.studyChart.data = weeklyData;
+      window.studyChart.update();
+      
+      weeklyTab.classList.remove('bg-gray-200', 'text-gray-700');
+      weeklyTab.classList.add('bg-blue-500', 'text-white');
+      monthlyTab.classList.remove('bg-blue-500', 'text-white');
+      monthlyTab.classList.add('bg-gray-200', 'text-gray-700');
+    });
     
-    weeklyTab.classList.remove('bg-gray-200', 'text-gray-700');
-    weeklyTab.classList.add('bg-blue-500', 'text-white');
-    monthlyTab.classList.remove('bg-blue-500', 'text-white');
-    monthlyTab.classList.add('bg-gray-200', 'text-gray-700');
-  });
-  
-  monthlyTab.addEventListener('click', function() {
-    window.studyChart.data = monthlyData;
-    window.studyChart.update();
+    monthlyTab.addEventListener('click', function() {
+      debugLog('Monthly tab clicked');
+      window.studyChart.data = monthlyData;
+      window.studyChart.update();
+      
+      monthlyTab.classList.remove('bg-gray-200', 'text-gray-700');
+      monthlyTab.classList.add('bg-blue-500', 'text-white');
+      weeklyTab.classList.remove('bg-blue-500', 'text-white');
+      weeklyTab.classList.add('bg-gray-200', 'text-gray-700');
+    });
     
-    monthlyTab.classList.remove('bg-gray-200', 'text-gray-700');
-    monthlyTab.classList.add('bg-blue-500', 'text-white');
-    weeklyTab.classList.remove('bg-blue-500', 'text-white');
-    weeklyTab.classList.add('bg-gray-200', 'text-gray-700');
-  });
+    debugLog('Tab event listeners attached');
+  } else {
+    debugLog('ERROR: Tab elements not found');
+  }
+}
+
+// Turboキャッシュ時のクリーンアップ
+document.addEventListener('turbo:before-cache', () => {
+  debugLog('turbo:before-cache event fired');
+  if (window.studyChart && typeof window.studyChart.destroy === 'function') {
+    try {
+      window.studyChart.destroy();
+      debugLog('Chart cleaned up for caching');
+    } catch (error) {
+      debugLog('Error cleaning up chart: ' + error.message);
+    }
+  }
+  window.studyChart = null;
+  chartInitialized = false;
+});
+
+// シンプルな初期化処理
+function initializeChart() {
+  // 遅延実行でChart.jsの読み込みを確実にする
+  setTimeout(() => {
+    debugLog('Attempting chart initialization...');
+    initializeDashboardChart();
+  }, 500);
 }
 
 // DOMContentLoadedとページの表示時の両方で実行
-document.addEventListener('DOMContentLoaded', initializeDashboardChart);
-document.addEventListener('turbo:load', initializeDashboardChart);
-document.addEventListener('turbo:frame-load', initializeDashboardChart);
-window.addEventListener('pageshow', initializeDashboardChart);
+document.addEventListener('DOMContentLoaded', initializeChart);
+document.addEventListener('turbo:load', initializeChart);
 
 // ページが表示された際に確実に実行
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeDashboardChart);
+  debugLog('Document still loading, adding DOMContentLoaded listener');
+  document.addEventListener('DOMContentLoaded', initializeChart);
 } else {
-  initializeDashboardChart();
+  debugLog('Document already loaded, initializing immediately');
+  initializeChart();
 }
 </script>

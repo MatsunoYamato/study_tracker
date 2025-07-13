@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "pomodoro/index", type: :view do
+RSpec.describe 'pomodoro/index', type: :view do
   let(:user) { create(:user) }
   let(:tags) { create_list(:tag, 3) }
   let(:recent_sessions) { create_list(:study_session, 2, user: user) }
@@ -10,7 +10,7 @@ RSpec.describe "pomodoro/index", type: :view do
     assign(:recent_sessions, recent_sessions)
     assign(:today_sessions, 5)
     assign(:today_minutes, 150)
-    
+
     allow(view).to receive(:current_user).and_return(user)
     allow(view).to receive(:user_signed_in?).and_return(true)
   end

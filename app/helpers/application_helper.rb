@@ -18,7 +18,7 @@ module ApplicationHelper
 
   # ページタイトルを設定
   def page_title(title = nil)
-    base_title = 'StudyTracker - 学習記録管理アプリ'
+    base_title = 'DevLogger - エンジニアの技術学習記録'
     if title.present?
       "#{title} | #{base_title}"
     else
@@ -28,13 +28,13 @@ module ApplicationHelper
 
   # メタデータを設定
   def meta_description(description = nil)
-    description.presence || 'StudyTrackerは学習記録を効率的に管理するWebアプリケーションです。ポモドーロタイマー、タグ管理、統計機能で学習効率を向上させます。'
+    description.presence || 'DevLoggerはエンジニアの技術学習を効率的に記録・管理するWebアプリケーションです。プログラミング、クラウド、DevOpsなどの学習ログをポモドーロタイマーとタグ管理で効率化します。'
   end
 
   # OpenGraphメタデータを設定
   def og_image_url
     image_url('study_tracker_og.png')
-  rescue
+  rescue StandardError
     nil
   end
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "StudySessions", type: :request do
+RSpec.describe 'StudySessions', type: :request do
   let(:user) { create(:user) }
   let(:tag) { create(:tag) }
   let(:study_session) { create(:study_session, user: user) }
@@ -9,7 +9,7 @@ RSpec.describe "StudySessions", type: :request do
     sign_in user
   end
 
-  describe "GET /study_sessions" do
+  describe 'GET /study_sessions' do
     let!(:session1) { create(:study_session, user: user, note: 'Ruby学習') }
     let!(:session2) { create(:study_session, user: user, note: 'JavaScript学習') }
 
@@ -26,26 +26,26 @@ RSpec.describe "StudySessions", type: :request do
       end
 
       it '日付範囲での絞り込みが機能すること' do
-        old_session = create(:study_session, user: user, studied_at: 1.week.ago)
+        create(:study_session, user: user, studied_at: 1.week.ago)
         new_session = create(:study_session, user: user, studied_at: 1.day.ago)
-        
-        get study_sessions_path, params: { 
-          date_from: 2.days.ago.to_date.to_s 
+
+        get study_sessions_path, params: {
+          date_from: 2.days.ago.to_date.to_s
         }
         expect(response.body).to include(new_session.note)
       end
 
       it 'タグでの絞り込みが機能すること' do
         session1.tags << tag
-        
+
         get study_sessions_path, params: { tag_ids: [tag.id] }
         expect(response).to have_http_status(:success)
       end
 
       it '学習時間での絞り込みが機能すること' do
-        short_session = create(:study_session, user: user, duration: 10)
-        long_session = create(:study_session, user: user, duration: 60)
-        
+        create(:study_session, user: user, duration: 10)
+        create(:study_session, user: user, duration: 60)
+
         get study_sessions_path, params: { duration_min: 30 }
         expect(response).to have_http_status(:success)
       end
@@ -56,7 +56,7 @@ RSpec.describe "StudySessions", type: :request do
       end
 
       it '複数の検索条件を組み合わせて使用できること' do
-        get study_sessions_path, params: { 
+        get study_sessions_path, params: {
           keyword: 'Ruby',
           duration_min: 10,
           sort: 'date_desc'
@@ -89,7 +89,7 @@ RSpec.describe "StudySessions", type: :request do
     end
   end
 
-  describe "GET /study_sessions/new" do
+  describe 'GET /study_sessions/new' do
     it '正常にレスポンスが返されること' do
       get new_study_session_path
       expect(response).to have_http_status(:success)
@@ -101,7 +101,7 @@ RSpec.describe "StudySessions", type: :request do
     end
   end
 
-  describe "POST /study_sessions" do
+  describe 'POST /study_sessions' do
     let(:valid_params) do
       {
         study_session: {
@@ -115,9 +115,9 @@ RSpec.describe "StudySessions", type: :request do
 
     context '有効なパラメータの場合' do
       it 'セッションが作成されること' do
-        expect {
+        expect do
           post study_sessions_path, params: valid_params
-        }.to change(StudySession, :count).by(1)
+        end.to change(StudySession, :count).by(1)
       end
 
       it 'タグが関連付けられること' do
@@ -150,9 +150,9 @@ RSpec.describe "StudySessions", type: :request do
       end
 
       it 'セッションが作成されないこと' do
-        expect {
+        expect do
           post study_sessions_path, params: invalid_params
-        }.not_to change(StudySession, :count)
+        end.not_to change(StudySession, :count)
       end
 
       it '新規作成フォームが再表示されること' do
@@ -163,7 +163,7 @@ RSpec.describe "StudySessions", type: :request do
     end
   end
 
-  describe "GET /study_sessions/:id" do
+  describe 'GET /study_sessions/:id' do
     it '正常にレスポンスが返されること' do
       get study_session_path(study_session)
       expect(response).to have_http_status(:success)
@@ -185,7 +185,7 @@ RSpec.describe "StudySessions", type: :request do
     end
   end
 
-  describe "GET /study_sessions/:id/edit" do
+  describe 'GET /study_sessions/:id/edit' do
     it '正常にレスポンスが返されること' do
       get edit_study_session_path(study_session)
       expect(response).to have_http_status(:success)
@@ -197,7 +197,7 @@ RSpec.describe "StudySessions", type: :request do
     end
   end
 
-  describe "PATCH /study_sessions/:id" do
+  describe 'PATCH /study_sessions/:id' do
     let(:update_params) do
       {
         study_session: {
@@ -259,12 +259,12 @@ RSpec.describe "StudySessions", type: :request do
     end
   end
 
-  describe "DELETE /study_sessions/:id" do
+  describe 'DELETE /study_sessions/:id' do
     it 'セッションが削除されること' do
       session_to_delete = create(:study_session, user: user)
-      expect {
+      expect do
         delete study_session_path(session_to_delete)
-      }.to change(StudySession, :count).by(-1)
+      end.to change(StudySession, :count).by(-1)
     end
 
     it '一覧ページにリダイレクトされること' do
@@ -279,11 +279,11 @@ RSpec.describe "StudySessions", type: :request do
     end
   end
 
-  describe "PATCH /study_sessions/quick_record" do
+  describe 'PATCH /study_sessions/quick_record' do
     it 'クイック記録が作成されること' do
-      expect {
+      expect do
         patch quick_record_study_sessions_path
-      }.to change(StudySession, :count).by(1)
+      end.to change(StudySession, :count).by(1)
     end
 
     it '25分のセッションが作成されること' do

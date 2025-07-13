@@ -30,6 +30,7 @@ class StudySession < ApplicationRecord
   validates :note, length: { maximum: 1000 }
 
   # スコープ（よく使う検索条件）
+
   scope :recent, -> { order(studied_at: :desc) }
   scope :today, -> { where(studied_at: Date.current.all_day) }
   scope :this_week, -> { where(studied_at: 1.week.ago..Time.current) }

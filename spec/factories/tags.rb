@@ -16,11 +16,11 @@ FactoryBot.define do
     description { Faker::Lorem.sentence }
     color { "##{Faker::Color.hex_color.delete('#').upcase}" }
     is_preset { false }
-    
+
     trait :preset do
       is_preset { true }
-      name { "Ruby" }
-      color { "#CC342D" }
+      name { 'Ruby' }
+      color { '#CC342D' }
     end
   end
 end

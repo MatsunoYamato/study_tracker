@@ -22,6 +22,6 @@ class StudySessionTag < ApplicationRecord
   belongs_to :study_session
   belongs_to :tag
 
-    # 重複防止
+  # 重複防止
   validates :study_session_id, uniqueness: { scope: :tag_id }
 end

@@ -20,12 +20,12 @@
 FactoryBot.define do
   factory :user do
     email { Faker::Internet.email }
-    password { "password123" }
-    password_confirmation { "password123" }
-    
+    password { 'password123' }
+    password_confirmation { 'password123' }
+
     # 特定のメールアドレスが必要な場合
     trait :with_specific_email do
-      email { "test@example.com" }
+      email { 'test@example.com' }
     end
   end
 end

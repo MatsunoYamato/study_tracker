@@ -1,96 +1,113 @@
-<%# StudyTracker ランディングページ %>
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+<%# DevLogger プロフェッショナルランディングページ %>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 relative overflow-hidden">
+    <%# アニメーション背景要素 %>
+    <div class="fixed inset-0 pointer-events-none" style="z-index: 1;">
+        <div class="floating-code-bg">
+            <div class="code-block code-block-1 animate-floating">&lt;/&gt;</div>
+            <div class="code-block code-block-2 animate-floating">{}</div>
+            <div class="code-block code-block-3 animate-floating">[]</div>
+            <div class="code-block code-block-4 animate-floating">&lt;/&gt;</div>
+            <div class="code-block code-block-5 animate-floating">{}</div>
+            <div class="code-block code-block-6 animate-floating">[]</div>
+        </div>
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-emerald-500/5 via-transparent to-slate-900/10"></div>
+    </div>
+
     <%# ナビゲーションバー %>
-    <nav class="bg-white shadow-sm">
+    <nav class="relative bg-slate-800/90 backdrop-blur-md border-b border-slate-700/50" style="z-index: 50;">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
                         </svg>
                     </div>
-                    <span class="text-xl font-bold text-gray-900">StudyTracker</span>
+                    <span class="text-2xl font-bold text-white tracking-tight">DevLogger</span>
                 </div>
 
                 <div class="flex items-center space-x-4">
                     <%= link_to "ログイン", new_user_session_path, 
-                      class: "text-gray-700 hover:text-blue-600 transition-colors" %>
+                      class: "text-slate-300 hover:text-emerald-400 transition-all duration-300 font-medium" %>
                     <%= link_to "新規登録", new_user_registration_path, 
-                      class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+                      class: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-6 py-2 rounded-lg transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105" %>
                 </div>
             </div>
         </div>
     </nav>
 
     <%# ヒーローセクション %>
-    <div class="container mx-auto px-4 py-16">
+    <div class="relative container mx-auto px-4 py-16 md:py-24 lg:py-32" style="z-index: 10;">
         <div class="text-center">
-            <h1 class="text-5xl font-bold text-gray-900 mb-6">
-                学習を記録し、<br>
-                <span class="text-blue-600">成長を可視化</span>しよう
-            </h1>
-            <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                StudyTrackerは、あなたの学習時間を記録し、タグ付けで整理することで、
-                効率的な学習習慣の構築をサポートします。
-            </p>
+            <div class="animate-fade-in-up">
+                <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight">
+                    技術学習を記録し、<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600 animate-gradient">スキルアップ</span>を加速
+                </h1>
+            </div>
+            <div class="animate-fade-in-up animation-delay-300">
+                <p class="text-xl text-slate-300 mb-16 max-w-3xl mx-auto leading-relaxed">
+                    DevLoggerは、エンジニアの技術学習時間を記録し、プログラミング言語やクラウド技術ごとに整理することで、
+                    効率的なスキルアップをサポートします。
+                </p>
+            </div>
 
-            <div class="flex justify-center space-x-4">
+            <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up animation-delay-600">
                 <%= link_to "今すぐ始める", new_user_registration_path, 
-                    class: "bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg" %>
+                    class: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1" %>
                 <%= link_to "詳細を見る", "#features", 
-                    class: "bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg border border-blue-200" %>
+                    class: "bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 shadow-lg border border-slate-600 hover:border-emerald-400 backdrop-blur-sm" %>
             </div>
         </div>
     </div>
 
-    <%# 機能紹介セクション %>
-    <div id="features" class="container mx-auto px-4 py-16">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">主な機能</h2>
-            <p class="text-gray-600 max-w-2xl mx-auto">
+    <%# 機能セクション %>
+    <div id="features" class="relative container mx-auto px-4 py-16 md:py-24" style="z-index: 10;">
+        <div class="text-center mb-20 animate-fade-in-up">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-8">主な機能</h2>
+            <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
                 学習の記録から分析まで、あなたの学習をトータルサポート
             </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <%# 学習記録機能 %>
-            <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="feature-card bg-slate-800/50 backdrop-blur-sm p-8 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl group">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">学習時間の記録</h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-semibold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300">学習時間の記録</h3>
+                <p class="text-slate-300 leading-relaxed">
                     学習時間を分単位で記録し、メモと一緒に保存。
                     ポモドーロテクニックにも対応しています。
                 </p>
             </div>
 
             <%# タグ機能 %>
-            <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
-                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="feature-card bg-slate-800/50 backdrop-blur-sm p-8 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl group animation-delay-200">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">タグ機能</h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-semibold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300">タグ機能</h3>
+                <p class="text-slate-300 leading-relaxed">
                     学習内容を色分けされたタグで整理。
                     科目や分野ごとに時間を分析できます。
                 </p>
             </div>
 
             <%# 統計・分析機能 %>
-            <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
-                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="feature-card bg-slate-800/50 backdrop-blur-sm p-8 rounded-xl border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-500 hover:transform hover:scale-105 hover:shadow-2xl group animation-delay-400">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-4">統計・分析</h3>
-                <p class="text-gray-600">
+                <h3 class="text-xl font-semibold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300">統計・分析</h3>
+                <p class="text-slate-300 leading-relaxed">
                     日別・週別の学習時間を表示。
                     タグ別の統計で学習バランスを把握できます。
                 </p>
@@ -99,44 +116,44 @@
     </div>
 
     <%# 使い方セクション %>
-    <div class="bg-white">
-        <div class="container mx-auto px-4 py-16">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">使い方</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">
+    <div class="relative bg-slate-800/30 backdrop-blur-sm border-t border-slate-700/50" style="z-index: 10;">
+        <div class="container mx-auto px-4 py-16 md:py-24">
+            <div class="text-center mb-20 animate-fade-in-up">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-8">使い方</h2>
+                <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
                     3つの簡単なステップで学習記録を始められます
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl font-bold text-blue-600">1</span>
+                <div class="text-center group">
+                    <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                        <span class="text-2xl font-bold text-white">1</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">アカウント作成</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300">アカウント作成</h3>
+                    <p class="text-slate-300 leading-relaxed">
                         メールアドレスとパスワードで簡単に登録。
                         すぐに学習記録を開始できます。
                     </p>
                 </div>
 
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl font-bold text-green-600">2</span>
+                <div class="text-center group animation-delay-200">
+                    <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                        <span class="text-2xl font-bold text-white">2</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">学習記録</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300">学習記録</h3>
+                    <p class="text-slate-300 leading-relaxed">
                         学習時間とタグを選択して記録。
                         メモも残せるので振り返りも簡単です。
                     </p>
                 </div>
 
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <span class="text-2xl font-bold text-purple-600">3</span>
+                <div class="text-center group animation-delay-400">
+                    <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-all duration-300 shadow-lg">
+                        <span class="text-2xl font-bold text-white">3</span>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 mb-4">分析・改善</h3>
-                    <p class="text-gray-600">
+                    <h3 class="text-xl font-semibold text-white mb-4 group-hover:text-emerald-400 transition-colors duration-300">分析・改善</h3>
+                    <p class="text-slate-300 leading-relaxed">
                         ダッシュボードで学習状況を分析。
                         効率的な学習習慣を構築しましょう。
                     </p>
@@ -145,37 +162,198 @@
         </div>
     </div>
 
-    <%# CTAセクション %>
-    <div class="bg-gradient-to-r from-blue-500 to-indigo-600">
-        <div class="container mx-auto px-4 py-16 text-center">
-            <h2 class="text-3xl font-bold text-white mb-4">
-                今日から学習記録を始めませんか？
-            </h2>
-            <p class="text-blue-100 mb-8 max-w-2xl mx-auto">
-                StudyTrackerで効率的な学習習慣を身につけ、目標達成に向けて着実に前進しましょう。
-            </p>
+    <%# 行動促進セクション %>
+    <div class="relative bg-gradient-to-r from-emerald-500 to-emerald-600 overflow-hidden" style="z-index: 10;">
+        <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/90 to-emerald-600/90"></div>
+        <div class="relative container mx-auto px-4 py-16 md:py-24 text-center">
+            <div class="animate-fade-in-up">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-8">
+                    今日から学習記録を始めませんか？
+                </h2>
+                <p class="text-xl text-emerald-100 mb-16 max-w-3xl mx-auto leading-relaxed">
+                    DevLoggerで効率的な技術学習習慣を身につけ、エンジニアとしてのスキルアップを着実に進めましょう。
+                </p>
 
-            <%= link_to "無料で始める", new_user_registration_path, 
-                  class: "bg-white hover:bg-gray-100 text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold transition-colors shadow-lg" %>
+                <%= link_to "無料で始める", new_user_registration_path, 
+                      class: "bg-white hover:bg-gray-100 text-emerald-600 rounded-lg text-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 hover:-translate-y-1", 
+                      style: "padding: 1rem 2.5rem !important; display: inline-block !important; text-decoration: none !important; min-height: 48px !important; box-sizing: border-box !important;" %>
+            </div>
         </div>
     </div>
 
     <%# フッター %>
-    <footer class="bg-gray-800 text-white">
-        <div class="container mx-auto px-4 py-8">
+    <footer class="relative bg-slate-900 text-white border-t border-slate-700/50" style="z-index: 10;">
+        <div class="container mx-auto px-4 py-12">
             <div class="text-center">
-                <div class="flex items-center justify-center space-x-2 mb-4">
-                    <div class="w-6 h-6 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <div class="flex items-center justify-center space-x-3 mb-6">
+                    <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z" />
                         </svg>
                     </div>
-                    <span class="text-lg font-semibold">StudyTracker</span>
+                    <span class="text-2xl font-bold tracking-tight">DevLogger</span>
                 </div>
-                <p class="text-gray-400">
-                    © 2024 StudyTracker. 学習記録で成長を可視化。
+                <p class="text-slate-400 text-lg">
+                    © 2024 DevLogger. エンジニアの技術学習を効率化。
                 </p>
             </div>
         </div>
     </footer>
 </div>
+
+<style>
+    /* カスタムアニメーションとスタイル */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes gradient {
+
+        0%,
+        100% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+    }
+
+    @keyframes floating {
+
+        0%,
+        100% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .animate-gradient {
+        background-size: 200% 200%;
+        animation: gradient 3s ease infinite;
+    }
+
+    .animate-floating {
+        animation: floating 6s ease-in-out infinite;
+    }
+
+    .animation-delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    .animation-delay-300 {
+        animation-delay: 0.3s;
+    }
+
+    .animation-delay-400 {
+        animation-delay: 0.4s;
+    }
+
+    .animation-delay-600 {
+        animation-delay: 0.6s;
+    }
+
+    .floating-code-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        opacity: 0.08;
+    }
+
+    .code-block {
+        position: absolute;
+        color: #10b981;
+        font-family: 'Courier New', monospace;
+        font-size: 2rem;
+        font-weight: bold;
+        user-select: none;
+    }
+
+    .code-block-1 {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .code-block-2 {
+        top: 20%;
+        right: 15%;
+        animation-delay: 1s;
+    }
+
+    .code-block-3 {
+        top: 60%;
+        left: 5%;
+        animation-delay: 2s;
+    }
+
+    .code-block-4 {
+        top: 70%;
+        right: 10%;
+        animation-delay: 3s;
+    }
+
+    .code-block-5 {
+        top: 40%;
+        left: 50%;
+        animation-delay: 4s;
+    }
+
+    .code-block-6 {
+        top: 80%;
+        left: 70%;
+        animation-delay: 5s;
+    }
+
+    .feature-card {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .feature-card:hover::before {
+        left: 100%;
+    }
+
+    /* レスポンシブアニメーション */
+    @media (max-width: 768px) {
+        .animate-fade-in-up {
+            animation-delay: 0s;
+        }
+
+        .animation-delay-200,
+        .animation-delay-300,
+        .animation-delay-400,
+        .animation-delay-600 {
+            animation-delay: 0s;
+        }
+    }
+</style>

@@ -1,22 +1,22 @@
 <%# 新規登録画面 %>
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+<div class="min-h-screen flex items-center justify-center bg-slate-800 py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md w-full space-y-8">
     <div>
-      <div class="mx-auto h-12 w-12 bg-blue-500 rounded-lg flex items-center justify-center">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="mx-auto h-12 w-12 bg-slate-700 rounded-lg flex items-center justify-center">
+        <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
         </svg>
       </div>
-      <h2 class="mt-6 text-center text-3xl font-bold text-gray-900">新規アカウント作成</h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
+      <h2 class="mt-6 text-center text-3xl font-bold text-white">新規アカウント作成</h2>
+      <p class="mt-2 text-center text-sm text-slate-300">
         または
         <%= link_to "既存アカウントでログイン", new_user_session_path, 
-                    class: "font-medium text-blue-600 hover:text-blue-500" %>
+                    class: "font-medium text-emerald-400 hover:text-emerald-300" %>
       </p>
     </div>
     
-    <div class="bg-white py-8 px-6 shadow rounded-lg">
+    <div class="bg-gray-100 py-8 px-6 shadow rounded-lg">
       <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "space-y-6" }) do |f| %>
         <%= render "users/shared/error_messages", resource: resource %>
 
@@ -26,7 +26,7 @@
             <%= f.email_field :email, 
                               autofocus: true, 
                               autocomplete: "email",
-                              class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+                              class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
           </div>
         </div>
 
@@ -38,7 +38,7 @@
           <div class="mt-1">
             <%= f.password_field :password, 
                                 autocomplete: "new-password",
-                                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+                                class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
           </div>
         </div>
 
@@ -47,13 +47,13 @@
           <div class="mt-1">
             <%= f.password_field :password_confirmation, 
                                 autocomplete: "new-password",
-                                class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+                                class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
           </div>
         </div>
 
         <div>
           <%= f.submit "アカウント作成", 
-                      class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors" %>
+                      class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors" %>
         </div>
       <% end %>
       

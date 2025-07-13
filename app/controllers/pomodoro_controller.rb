@@ -12,20 +12,20 @@ class PomodoroController < ApplicationController
   # POST /pomodoro/save_session
   def save_session
     @study_session = current_user.study_sessions.build(session_params)
-    
+
     if @study_session.save
       # タグの関連付け
       attach_tags(@study_session, params[:tag_ids]) if params[:tag_ids].present?
-      
-      render json: { 
-        status: 'success', 
+
+      render json: {
+        status: 'success',
         message: 'ポモドーロセッションを保存しました！',
         session_id: @study_session.id,
         duration: @study_session.duration_in_hours
       }
     else
-      render json: { 
-        status: 'error', 
+      render json: {
+        status: 'error',
         message: @study_session.errors.full_messages.join(', ')
       }
     end

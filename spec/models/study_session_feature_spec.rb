@@ -19,13 +19,13 @@ RSpec.describe StudySession, type: :model do
       it '0以下の場合は無効' do
         study_session.duration = 0
         expect(study_session).not_to be_valid
-        expect(study_session.errors[:duration]).to include("must be greater than 0")
+        expect(study_session.errors[:duration]).to include('must be greater than 0')
       end
 
       it '720分（12時間）を超える場合は無効' do
         study_session.duration = 721
         expect(study_session).not_to be_valid
-        expect(study_session.errors[:duration]).to include("must be less than or equal to 720")
+        expect(study_session.errors[:duration]).to include('must be less than or equal to 720')
       end
 
       it '720分（12時間）ちょうどの場合は有効' do
@@ -184,14 +184,14 @@ RSpec.describe StudySession, type: :model do
 
     describe 'ユーザーとの関連' do
       it 'ユーザーを削除するとStudySessionも削除される' do
-        study_session = create(:study_session, user: user)
+        create(:study_session, user: user)
         expect { user.destroy }.to change(StudySession, :count).by(-1)
       end
 
       it 'ユーザーは複数のStudySessionを持つことができる' do
         session1 = create(:study_session, user: user)
         session2 = create(:study_session, user: user)
-        
+
         expect(user.study_sessions).to include(session1, session2)
         expect(user.study_sessions.count).to eq(2)
       end
@@ -208,9 +208,9 @@ RSpec.describe StudySession, type: :model do
 
     it '同じユーザーが同じ時刻に複数の学習記録を作成できる' do
       time = Time.current
-      session1 = create(:study_session, user: user, studied_at: time)
+      create(:study_session, user: user, studied_at: time)
       session2 = build(:study_session, user: user, studied_at: time)
-      
+
       expect(session2).to be_valid
       expect { session2.save! }.not_to raise_error
     end
@@ -222,21 +222,19 @@ RSpec.describe StudySession, type: :model do
 
     it 'tagsアソシエーションを適切にロードできる' do
       sessions.each { |s| s.tags << create(:tag) }
-      
+
       # includes使用時にクエリ数が削減されることを確認
-      query_count_without_includes = 0
-      query_count_with_includes = 0
-      
+
       # includesなし
       ActiveRecord::Base.connection.query_cache.clear
-      ActiveRecord::Base.connection.execute("SELECT 1") # ダミークエリでカウンタリセット
+      ActiveRecord::Base.connection.execute('SELECT 1') # ダミークエリでカウンタリセット
       StudySession.all.each { |session| session.tags.to_a }
-      
+
       # includesあり
       ActiveRecord::Base.connection.query_cache.clear
-      ActiveRecord::Base.connection.execute("SELECT 1") # ダミークエリでカウンタリセット
+      ActiveRecord::Base.connection.execute('SELECT 1') # ダミークエリでカウンタリセット
       StudySession.includes(:tags).each { |session| session.tags.to_a }
-      
+
       # クエリ最適化の確認（具体的な数値は環境に依存するため、実行可能性のみテスト）
       expect(StudySession.includes(:tags).to_a).to be_present
     end
