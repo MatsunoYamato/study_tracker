@@ -1,0 +1,113 @@
+<%# 学習記録詳細画面 %>
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">学習記録詳細</h1>
+          <p class="text-gray-600">
+            <%= @study_session.studied_at.strftime("%Y年%m月%d日 %H:%M") %>の記録
+          </p>
+        </div>
+        <div class="flex space-x-2">
+          <%= link_to "編集", edit_study_session_path(@study_session), 
+                      class: "bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+          <%= link_to "削除", @study_session, 
+                      data: { 
+                        "turbo-method": :delete,
+                        "turbo-confirm": "本当に削除しますか？"
+                      },
+                      class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <%# 学習時間 %>
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="p-2 bg-blue-100 rounded-full">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-blue-600">学習時間</p>
+              <p class="text-2xl font-semibold text-blue-800">
+                <%= @study_session.formatted_duration %>
+              </p>
+              <p class="text-sm text-blue-600">(<%= @study_session.duration %>分)</p>
+            </div>
+          </div>
+        </div>
+
+        <%# 学習日時 %>
+        <div class="bg-green-50 p-4 rounded-lg">
+          <div class="flex items-center">
+            <div class="p-2 bg-green-100 rounded-full">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-green-600">学習日時</p>
+              <p class="text-lg font-semibold text-green-800">
+                <%= @study_session.studied_at.strftime("%Y年%m月%d日") %>
+              </p>
+              <p class="text-sm text-green-600">
+                <%= @study_session.studied_at.strftime("%H:%M") %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%# タグ %>
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">タグ</h2>
+        <% if @study_session.tags.any? %>
+          <div class="flex flex-wrap gap-2">
+            <% @study_session.tags.each do |tag| %>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" 
+                    style="background-color: <%= tag.color %>20; color: <%= tag.color %>;">
+                <div class="w-2 h-2 rounded-full mr-2" style="background-color: <%= tag.color %>;"></div>
+                <%= tag.name %>
+              </span>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-gray-500">タグが設定されていません</p>
+        <% end %>
+      </div>
+
+      <%# メモ %>
+      <div class="mb-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-3">メモ</h2>
+        <% if @study_session.note.present? %>
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-gray-700 whitespace-pre-wrap"><%= @study_session.note %></p>
+          </div>
+        <% else %>
+          <p class="text-gray-500">メモが記録されていません</p>
+        <% end %>
+      </div>
+
+      <%# 作成・更新情報 %>
+      <div class="pt-4 border-t border-gray-200">
+        <div class="flex justify-between text-sm text-gray-500">
+          <span>作成日時: <%= @study_session.created_at.strftime("%Y/%m/%d %H:%M") %></span>
+          <span>更新日時: <%= @study_session.updated_at.strftime("%Y/%m/%d %H:%M") %></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 text-center space-x-4">
+      <%= link_to "一覧に戻る", study_sessions_path, 
+                  class: "text-blue-600 hover:text-blue-800 transition-colors" %>
+      <span class="text-gray-400">•</span>
+      <%= link_to "ダッシュボード", dashboard_path, 
+                  class: "text-blue-600 hover:text-blue-800 transition-colors" %>
+    </div>
+  </div>
+</div>

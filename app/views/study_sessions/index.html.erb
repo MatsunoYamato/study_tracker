@@ -1,0 +1,316 @@
+<%# 学習記録一覧画面 %>
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+        <h1 class="text-2xl sm:text-3xl font-bold text-white">学習記録一覧</h1>
+        <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+            <%= link_to "記録を追加", new_study_session_path, 
+                  class: "bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors text-center" %>
+            <%= link_to "ダッシュボード", dashboard_path, 
+                  class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors text-center" %>
+        </div>
+    </div>
+
+    <%# 検索・フィルター機能 %>
+    <div class="bg-gray-100 rounded-lg shadow-md p-6 mb-8">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold text-gray-900">検索・フィルター</h2>
+            <button id="toggle-search" class="text-emerald-600 hover:text-emerald-800 text-sm">
+                <span id="toggle-text">詳細検索</span>
+                <svg id="toggle-icon" class="w-4 h-4 inline ml-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+        </div>
+
+        <%= form_with url: study_sessions_path, method: :get, local: true, class: "space-y-4" do |form| %>
+        <%# 基本検索（常に表示） %>
+        <div class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <%= form.text_field :keyword, 
+                               value: @search_params[:keyword], 
+                               placeholder: "キーワード検索（タグ名・メモ内容）",
+                               class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+                </div>
+                <div>
+                    <%= form.select :sort, 
+                           options_for_select([
+                             ['学習日時（新しい順）', 'date_desc'],
+                             ['学習日時（古い順）', 'date_asc'],
+                             ['学習時間（長い順）', 'duration_desc'],
+                             ['学習時間（短い順）', 'duration_asc'],
+                             ['作成日時（新しい順）', 'created_desc'],
+                             ['作成日時（古い順）', 'created_asc']
+                           ], @search_params[:sort] || 'date_desc'),
+                           { prompt: "並び替え" },
+                           { class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" } %>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2 lg:gap-2">
+                    <%= form.submit "検索", class: "bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+                    <%= link_to "リセット", study_sessions_path, class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors text-center" %>
+                </div>
+            </div>
+
+            <%# タグ選択（基本検索に移動） %>
+            <div>
+                <%= form.label :tag_ids, "タグで絞り込み", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
+                    <% @tags.each do |tag| %>
+                    <label class="flex items-center space-x-2 p-2 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors">
+                        <%= check_box_tag "tag_ids[]", tag.id, 
+                                 (@search_params[:tag_ids] && @search_params[:tag_ids].include?(tag.id.to_s)), 
+                                 class: "rounded text-emerald-500 focus:ring-emerald-500" %>
+                        <div class="flex items-center space-x-2 min-w-0">
+                            <div class="w-3 h-3 rounded-full flex-shrink-0" style="background-color: <%= tag.color %>;"></div>
+                            <span class="text-sm text-gray-700 truncate"><%= tag.name %></span>
+                        </div>
+                    </label>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
+        <%# 詳細検索（折りたたみ可能） %>
+        <div id="advanced-search" class="hidden space-y-4 pt-4 border-t border-gray-200">
+            <%# 日付範囲 %>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <%= form.label :date_from, "開始日", class: "block text-sm font-medium text-gray-700 mb-1" %>
+                    <%= form.date_field :date_from, 
+                               value: @search_params[:date_from],
+                               class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+                </div>
+                <div>
+                    <%= form.label :date_to, "終了日", class: "block text-sm font-medium text-gray-700 mb-1" %>
+                    <%= form.date_field :date_to, 
+                               value: @search_params[:date_to],
+                               class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+                </div>
+            </div>
+
+            <%# 学習時間範囲 %>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <%= form.label :duration_min, "最小学習時間（分）", class: "block text-sm font-medium text-gray-700 mb-1" %>
+                    <%= form.number_field :duration_min, 
+                                 value: @search_params[:duration_min],
+                                 min: 1,
+                                 class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+                </div>
+                <div>
+                    <%= form.label :duration_max, "最大学習時間（分）", class: "block text-sm font-medium text-gray-700 mb-1" %>
+                    <%= form.number_field :duration_max, 
+                                 value: @search_params[:duration_max],
+                                 min: 1,
+                                 class: "w-full px-3 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" %>
+                </div>
+            </div>
+
+        </div>
+        <% end %>
+    </div>
+
+    <%# 検索結果の表示 %>
+    <% if @search_params.values.any?(&:present?) %>
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center space-x-2">
+            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span class="text-blue-800 font-medium">検索結果: <%= @study_sessions.count %>件</span>
+        </div>
+    </div>
+    <% end %>
+
+    <% if @study_sessions.any? %>
+    <!-- デスクトップビュー -->
+    <div class="hidden lg:block bg-gray-100 rounded-lg shadow-md overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            学習日時
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            学習時間
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            タグ
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            メモ
+                        </th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            操作
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-gray-100 divide-y divide-gray-200">
+                    <% @study_sessions.each do |session| %>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                                <%= session.studied_at.strftime("%Y/%m/%d") %>
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                <%= session.studied_at.strftime("%H:%M") %>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">
+                                <%= format_duration_minutes(session.duration) %>
+                            </div>
+                            <% if session.duration >= 60 %>
+                            <div class="text-sm text-gray-500">
+                                (<%= session.duration %>分)
+                            </div>
+                            <% end %>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-wrap gap-2">
+                                <% session.tags.each do |tag| %>
+                                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium" style="background-color: <%= tag.color %>20; color: <%= tag.color %>;">
+                                    <%= tag.name %>
+                                </span>
+                                <% end %>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 max-w-xs truncate">
+                                <%= session.note.presence || "メモなし" %>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <div class="flex justify-end space-x-2">
+                                <%= link_to "詳細", session, 
+                                class: "text-blue-600 hover:text-blue-800 transition-colors" %>
+                                <%= link_to "編集", edit_study_session_path(session), 
+                                class: "text-green-600 hover:text-green-800 transition-colors" %>
+                                <%= link_to "削除", session, 
+                                data: { 
+                                  "turbo-method": :delete,
+                                  "turbo-confirm": "本当に削除しますか？" 
+                                },
+                                class: "text-red-600 hover:text-red-800 transition-colors" %>
+                            </div>
+                        </td>
+                    </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- モバイルビュー -->
+    <div class="lg:hidden space-y-4">
+        <% @study_sessions.each do |session| %>
+        <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+            <div class="flex items-start justify-between mb-3">
+                <div>
+                    <div class="text-lg font-medium text-gray-900">
+                        <%= format_duration_minutes(session.duration) %>
+                    </div>
+                    <div class="text-sm text-gray-500">
+                        <%= session.studied_at.strftime("%Y/%m/%d %H:%M") %>
+                    </div>
+                </div>
+                <div class="flex space-x-1 ml-4">
+                    <%= link_to "詳細", session, 
+                          class: "text-blue-600 hover:text-blue-800 text-sm px-2 py-1 rounded border border-blue-200 hover:bg-blue-50" %>
+                    <%= link_to "編集", edit_study_session_path(session), 
+                          class: "text-green-600 hover:text-green-800 text-sm px-2 py-1 rounded border border-green-200 hover:bg-green-50" %>
+                    <%= link_to "削除", session, 
+                          data: { 
+                            "turbo-method": :delete,
+                            "turbo-confirm": "本当に削除しますか？" 
+                          },
+                          class: "text-red-600 hover:text-red-800 text-sm px-2 py-1 rounded border border-red-200 hover:bg-red-50" %>
+                </div>
+            </div>
+
+            <% if session.tags.any? %>
+            <div class="flex flex-wrap gap-2 mb-3">
+                <% session.tags.each do |tag| %>
+                <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium" style="background-color: <%= tag.color %>20; color: <%= tag.color %>;">
+                    <%= tag.name %>
+                </span>
+                <% end %>
+            </div>
+            <% end %>
+
+            <% if session.note.present? %>
+            <div class="text-sm text-gray-600 bg-gray-50 p-2 rounded">
+                <%= session.note %>
+            </div>
+            <% end %>
+        </div>
+        <% end %>
+    </div>
+
+    <%# ページネーション（Pagyが利用可能な場合） %>
+    <% if defined?(Pagy) && @pagy %>
+    <div class="mt-6 flex justify-center">
+        <%== pagy_nav(@pagy) %>
+    </div>
+    <% end %>
+    <% else %>
+    <div class="bg-gray-100 rounded-lg shadow-md p-8 text-center">
+        <div class="mb-6">
+            <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">学習記録がありません</h3>
+        <p class="text-gray-600 mb-6">最初の学習記録を作成して、学習の進捗を追跡しましょう！</p>
+        <%= link_to "学習記録を作成", new_study_session_path, 
+                  class: "bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors" %>
+    </div>
+    <% end %>
+</div>
+
+<script>
+    function initializeSearchToggle() {
+        const toggleBtn = document.getElementById('toggle-search');
+        const toggleText = document.getElementById('toggle-text');
+        const toggleIcon = document.getElementById('toggle-icon');
+        const advancedSearch = document.getElementById('advanced-search');
+
+        if (!toggleBtn || !toggleText || !toggleIcon || !advancedSearch) return;
+
+        toggleBtn.addEventListener('click', function() {
+            if (advancedSearch.classList.contains('hidden')) {
+                // 詳細検索を表示
+                advancedSearch.classList.remove('hidden');
+                toggleText.textContent = '詳細検索を閉じる';
+                toggleIcon.classList.add('rotate-180');
+            } else {
+                // 詳細検索を非表示
+                advancedSearch.classList.add('hidden');
+                toggleText.textContent = '詳細検索';
+                toggleIcon.classList.remove('rotate-180');
+            }
+        });
+
+        // 詳細検索の項目に値が入っている場合は初期表示で開く
+        <
+        % has_advanced_params = [@search_params[: date_from], @search_params[: date_to], @search_params[: duration_min], @search_params[: duration_max]].any ? ( &: present ? ) % >
+            const hasAdvancedParams = < %= has_advanced_params % > ;
+        if (hasAdvancedParams) {
+            advancedSearch.classList.remove('hidden');
+            toggleText.textContent = '詳細検索を閉じる';
+            toggleIcon.classList.add('rotate-180');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeSearchToggle);
+    document.addEventListener('turbo:load', initializeSearchToggle);
+    document.addEventListener('turbo:frame-load', initializeSearchToggle);
+
+    // ページが表示された際に確実に実行
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeSearchToggle);
+    } else {
+        initializeSearchToggle();
+    }
+</script>

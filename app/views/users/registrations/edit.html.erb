@@ -1,0 +1,224 @@
+<%# プロフィール編集画面 %>
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <%# ヘッダー %>
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-white">プロフィール設定</h1>
+            <div class="flex space-x-4">
+                <%= link_to "ダッシュボード", dashboard_path, 
+                    class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+            </div>
+        </div>
+
+        <%# アカウント情報カード %>
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex items-center mb-6">
+                <div class="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mr-4 overflow-hidden" id="current-profile-image">
+                    <% if current_user.avatar.attached? %>
+                    <%= image_tag current_user.avatar, 
+                         class: "w-16 h-16 object-cover rounded-full",
+                         alt: "プロフィール画像" %>
+                    <% else %>
+                    <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                    </svg>
+                    <% end %>
+                </div>
+                <div>
+                    <h2 class="text-xl font-semibold text-gray-900">アカウント情報</h2>
+                    <p class="text-gray-600"><%= current_user.email %></p>
+                </div>
+            </div>
+
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "space-y-6" }) do |f| %>
+            <%= render "users/shared/error_messages", resource: resource %>
+
+            <%# プロフィール画像アップロード %>
+            <div>
+                <%= f.label :avatar, "プロフィール画像", class: "block text-sm font-medium text-gray-700 mb-3" %>
+                <div class="flex items-center space-x-4">
+                    <div class="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center overflow-hidden" id="avatar-preview">
+                        <% if current_user.avatar.attached? %>
+                        <%= image_tag current_user.avatar, 
+                             class: "w-20 h-20 object-cover rounded-full",
+                             alt: "プロフィール画像" %>
+                        <% else %>
+                        <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <% end %>
+                    </div>
+                    <div>
+                        <%= f.file_field :avatar, 
+                              accept: "image/jpeg,image/png,image/gif",
+                              class: "block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100",
+                              id: "avatar-upload" %>
+                        <p class="mt-1 text-xs text-gray-500">JPEG、PNG、GIF形式（最大2MB）</p>
+                        <% if current_user.avatar.attached? %>
+                        <button type="button" id="remove-avatar" class="mt-2 text-sm text-red-600 hover:text-red-800">画像を削除</button>
+                        <%= f.hidden_field :remove_avatar, value: false, id: "remove-avatar-field" %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+
+            <%# メールアドレス %>
+            <div>
+                <%= f.label :email, "メールアドレス", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                <%= f.email_field :email, 
+                           autofocus: true, 
+                           autocomplete: "email",
+                           class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+            </div>
+
+            <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 text-yellow-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-yellow-800">現在、メールアドレスの確認待ちです: <%= resource.unconfirmed_email %></span>
+                </div>
+            </div>
+            <% end %>
+
+            <%# パスワード変更セクション %>
+            <div class="border-t pt-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">パスワード変更</h3>
+                <p class="text-sm text-gray-600 mb-4">パスワードを変更しない場合は空欄のままにしてください</p>
+
+                <div class="space-y-4">
+                    <div>
+                        <%= f.label :password, "新しいパスワード", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                        <%= f.password_field :password, 
+                                 autocomplete: "new-password",
+                                 class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+                        <% if @minimum_password_length %>
+                        <p class="text-sm text-gray-500 mt-1">最低<%= @minimum_password_length %>文字以上</p>
+                        <% end %>
+                    </div>
+
+                    <div>
+                        <%= f.label :password_confirmation, "新しいパスワード（確認）", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                        <%= f.password_field :password_confirmation, 
+                                 autocomplete: "new-password",
+                                 class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+                    </div>
+
+                    <div>
+                        <%= f.label :current_password, "現在のパスワード", class: "block text-sm font-medium text-gray-700 mb-2" %>
+                        <%= f.password_field :current_password, 
+                                 autocomplete: "current-password",
+                                 class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+                        <p class="text-sm text-gray-500 mt-1">変更を確認するために現在のパスワードが必要です</p>
+                    </div>
+                </div>
+            </div>
+
+            <%# 更新ボタン %>
+            <div class="flex justify-end">
+                <%= f.submit "更新する", 
+                     class: "bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors" %>
+            </div>
+            <% end %>
+        </div>
+
+        <%# 学習統計カード %>
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">学習統計</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="text-center p-4 bg-blue-50 rounded-lg">
+                    <div class="text-2xl font-bold text-blue-600"><%= current_user.study_sessions.count %></div>
+                    <div class="text-sm text-gray-600">総学習セッション</div>
+                </div>
+                <div class="text-center p-4 bg-green-50 rounded-lg">
+                    <div class="text-2xl font-bold text-green-600">
+                        <%= format_duration_minutes(current_user.study_sessions.sum(:duration)) %>
+                    </div>
+                    <div class="text-sm text-gray-600">総学習時間</div>
+                </div>
+                <div class="text-center p-4 bg-purple-50 rounded-lg">
+                    <div class="text-2xl font-bold text-purple-600">
+                        <%= current_user.study_sessions.joins(:tags).group('tags.name').count.size %>
+                    </div>
+                    <div class="text-sm text-gray-600">使用タグ数</div>
+                </div>
+            </div>
+        </div>
+
+        <%# 危険ゾーン %>
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-red-900 mb-4">危険ゾーン</h3>
+            <p class="text-red-700 mb-4">アカウントを削除すると、すべての学習記録が永久に失われます。</p>
+
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="font-medium text-red-900">アカウントを削除</p>
+                    <p class="text-sm text-red-600">この操作は取り消せません</p>
+                </div>
+                <%= button_to "アカウントを削除", 
+                     registration_path(resource_name), 
+                     data: { 
+                       confirm: "本当にアカウントを削除しますか？すべての学習記録が失われます。",
+                       turbo_confirm: "本当にアカウントを削除しますか？すべての学習記録が失われます。"
+                     }, 
+                     method: :delete,
+                     class: "bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors" %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const avatarUpload = document.getElementById('avatar-upload');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const removeAvatarBtn = document.getElementById('remove-avatar');
+        const removeAvatarField = document.getElementById('remove-avatar-field');
+
+        // ファイル選択時のプレビュー
+        if (avatarUpload) {
+            avatarUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // ファイルサイズチェック
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('ファイルサイズは2MB以下にしてください');
+                        e.target.value = '';
+                        return;
+                    }
+
+                    // ファイル形式チェック
+                    if (!['image/jpeg', 'image/png', 'image/gif'].includes(file.type)) {
+                        alert('JPEG、PNG、GIF形式のファイルをアップロードしてください');
+                        e.target.value = '';
+                        return;
+                    }
+
+                    // プレビュー表示
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        avatarPreview.innerHTML = `<img src="${e.target.result}" class="w-20 h-20 object-cover rounded-full" alt="プレビュー">`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // 画像削除ボタン
+        if (removeAvatarBtn) {
+            removeAvatarBtn.addEventListener('click', function() {
+                if (confirm('プロフィール画像を削除しますか？')) {
+                    removeAvatarField.value = 'true';
+                    avatarPreview.innerHTML = `
+          <svg class="w-10 h-10 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+        `;
+                    removeAvatarBtn.style.display = 'none';
+                }
+            });
+        }
+    });
+</script>

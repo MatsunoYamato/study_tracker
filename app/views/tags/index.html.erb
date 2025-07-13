@@ -1,0 +1,104 @@
+<%# タグ管理一覧画面 %>
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-white">タグ管理</h1>
+        <div class="flex space-x-4">
+            <%= link_to "新しいタグを作成", new_tag_path, 
+                  class: "bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+            <%= link_to "ダッシュボード", dashboard_path, 
+                  class: "bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+        </div>
+    </div>
+
+    <%# タグ使用統計 %>
+    <% if @tag_usage.any? %>
+    <div class="bg-gray-100 rounded-lg shadow-md p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">使用統計</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <% @tag_usage.each do |tag_stat| %>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <div class="flex items-center space-x-3 mb-2">
+                    <div class="w-4 h-4 rounded-full" style="background-color: <%= tag_stat.color %>;"></div>
+                    <h3 class="font-medium text-gray-900"><%= tag_stat.name %></h3>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <p><%= tag_stat.usage_count %>回使用</p>
+                    <p>合計: <%= (tag_stat.total_duration / 60.0).round(1) %>時間</p>
+                </div>
+            </div>
+            <% end %>
+        </div>
+    </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <%# プリセットタグ %>
+        <div class="bg-gray-100 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">プリセットタグ</h2>
+            <% if @preset_tags.any? %>
+            <div class="space-y-3">
+                <% @preset_tags.each do |tag| %>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 rounded-full" style="background-color: <%= tag.color %>;"></div>
+                        <div>
+                            <h3 class="font-medium text-gray-900"><%= tag.name %></h3>
+                            <% if tag.description.present? %>
+                            <p class="text-sm text-gray-600"><%= tag.description %></p>
+                            <% end %>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <%= link_to "詳細", tag, class: "text-blue-600 hover:text-blue-800 text-sm" %>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+            <% else %>
+            <p class="text-gray-500 text-center py-4">プリセットタグがありません</p>
+            <% end %>
+        </div>
+
+        <%# ユーザー作成タグ %>
+        <div class="bg-gray-100 rounded-lg shadow-md p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">マイタグ</h2>
+            <% if @user_tags.any? %>
+            <div class="space-y-3">
+                <% @user_tags.each do |tag| %>
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-4 h-4 rounded-full" style="background-color: <%= tag.color %>;"></div>
+                        <div>
+                            <h3 class="font-medium text-gray-900"><%= tag.name %></h3>
+                            <% if tag.description.present? %>
+                            <p class="text-sm text-gray-600"><%= tag.description %></p>
+                            <% end %>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <%= link_to "詳細", tag, class: "text-blue-600 hover:text-blue-800 text-sm" %>
+                        <%= link_to "編集", edit_tag_path(tag), class: "text-green-600 hover:text-green-800 text-sm" %>
+                        <%= link_to "削除", tag, 
+                            method: :delete, 
+                            data: { confirm: "本当に削除しますか？" },
+                            class: "text-red-600 hover:text-red-800 text-sm" %>
+                    </div>
+                </div>
+                <% end %>
+            </div>
+            <% else %>
+            <div class="text-center py-8">
+                <div class="mb-4">
+                    <svg class="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">マイタグがありません</h3>
+                <p class="text-gray-600 mb-4">独自のタグを作成して学習記録を整理しましょう</p>
+                <%= link_to "新しいタグを作成", new_tag_path, 
+                      class: "bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors" %>
+            </div>
+            <% end %>
+        </div>
+    </div>
+</div>
