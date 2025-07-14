@@ -5,11 +5,23 @@
   <img src="https://img.shields.io/badge/Rails-7.1.5-red?style=for-the-badge&logo=rubyonrails&logoColor=white" alt="Rails">
   <img src="https://img.shields.io/badge/TailwindCSS-4.1-blue?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS">
   <img src="https://img.shields.io/badge/PostgreSQL-15-blue?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
+  
+  <br><br>
+  
+  <h3>🚀 <a href="https://study-tracker-p8i1.onrender.com" target="_blank">📱 アプリを試してみる</a></h3>
+  
+  <p>
+    <a href="https://study-tracker-p8i1.onrender.com" target="_blank">
+      <img src="https://img.shields.io/badge/Live%20Demo-DevLogger-success?style=for-the-badge&logo=render&logoColor=white" alt="Live Demo">
+    </a>
+  </p>
 </div>
 
 ## 概要
 
 DevLoggerは、エンジニアの技術学習時間を効率的に記録・管理するためのWebアプリケーションです。プログラミング言語やクラウド技術ごとに学習時間を整理し、ポモドーロテクニックを活用した集中学習をサポートします。
+
+**🌟 [アプリを実際に試してみる →](https://study-tracker-p8i1.onrender.com)**
 
 ### 🎯 主な特徴
 
@@ -26,6 +38,7 @@ DevLoggerは、エンジニアの技術学習時間を効率的に記録・管�
 - **Ruby 3.2.0**
 - **Ruby on Rails 7.1.5**
 - **PostgreSQL** (本番環境)
+- **SQLite3** (開発環境)
 
 ### フロントエンド
 - **TailwindCSS 4.1** - モダンなスタイリング
@@ -86,6 +99,52 @@ DevLoggerは、エンジニアの技術学習時間を効率的に記録・管�
 - Node.js 18+
 - PostgreSQL 13+ (本番環境)
 - Git
+
+### ローカル開発環境
+
+1. **リポジトリのクローン**
+```bash
+git clone https://github.com/[your-username]/study_tracker.git
+cd study_tracker
+```
+
+2. **依存関係のインストール**
+```bash
+# Ruby gems
+bundle install
+
+# Node.js packages
+npm install
+```
+
+3. **データベースのセットアップ**
+```bash
+# データベース作成
+rails db:create
+
+# マイグレーション実行
+rails db:migrate
+
+# サンプルデータ投入（オプション）
+rails db:seed
+```
+
+4. **環境変数の設定**
+```bash
+cp .env.example .env
+# .envファイルを編集して必要な環境変数を設定
+```
+
+5. **サーバー起動**
+```bash
+# Tailwind CSS ビルド（別ターミナル）
+npm run build:css -- --watch
+
+# Railsサーバー起動
+rails server
+```
+
+アプリケーションは `http://localhost:3000` でアクセス可能です。
 
 ## 📱 主要画面
 
@@ -171,4 +230,10 @@ COVERAGE=true bundle exec rspec
 
 <div align="center">
   <p>🚀 <strong>DevLogger</strong> でエンジニアの学習を次のレベルへ！</p>
+  
+  <p>
+    <a href="https://study-tracker-p8i1.onrender.com" target="_blank">
+      <strong>📱 今すぐアプリを使ってみる</strong>
+    </a>
+  </p>
 </div>
