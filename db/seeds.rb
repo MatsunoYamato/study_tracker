@@ -2,6 +2,13 @@
 # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
+# 重複実行チェック
+if Tag.where(is_preset: true).exists?
+  puts 'プリセットタグは既に存在します。スキップします。'
+  puts '強制的に再作成する場合は: rails db:seed:replant'
+  exit
+end
+
 # プリセットタグを作成（エンジニア向け学習カテゴリ）
 preset_tags = [
   # === プログラミング言語 ===
@@ -77,13 +84,36 @@ preset_tags = [
 
 puts 'プリセットタグを作成中...'
 
-preset_tags.each do |tag_data|
-  tag = Tag.find_or_create_by(name: tag_data[:name]) do |t|
-    t.color = tag_data[:color]
-    t.description = tag_data[:description]
-    t.is_preset = true
+created_count = 0
+skipped_count = 0
+
+Tag.transaction do
+  preset_tags.each do |tag_data|
+    tag = Tag.find_or_initialize_by(name: tag_data[:name])
+    
+    if tag.new_record?
+      tag.assign_attributes(
+        color: tag_data[:color],
+        description: tag_data[:description],
+        is_preset: true
+      )
+      
+      if tag.save
+        puts "  ✓ #{tag.name} - 作成"
+        created_count += 1
+      else
+        puts "  ✗ #{tag.name} - エラー: #{tag.errors.full_messages.join(', ')}"
+      end
+    else
+      puts "  - #{tag.name} - スキップ（既存）"
+      skipped_count += 1
+    end
   end
-  puts "  #{tag.name} - #{tag.persisted? ? '作成済み' : '作成'}"
 end
 
-puts 'シードデータの作成が完了しました！'
+puts ''
+puts "=========================================="
+puts "プリセットタグの作成が完了しました！"
+puts "作成: #{created_count}件"
+puts "スキップ: #{skipped_count}件"
+puts "=========================================="
