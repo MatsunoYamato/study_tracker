@@ -79,6 +79,4 @@ test:
 #
 production:
   <<: *default
-  database: study_tracker_production
-  username: study_tracker
-  password: <%= ENV["STUDY_TRACKER_DATABASE_PASSWORD"] %>
+  url: <%= ENV["postgresql://devlogger_db_user:PgVzIgQ6kSFwpK1EWOm1Qzd5iZaVtoMH@dpg-d1qf5lidbo4c73cerbpg-a.singapore-postgres.render.com/devlogger_db"] %>
