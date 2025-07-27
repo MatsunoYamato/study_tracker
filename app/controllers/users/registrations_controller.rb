@@ -1,4 +1,18 @@
 class Users::RegistrationsController < Devise::RegistrationsController
+  def guest_sign_in
+    guest_user = User.find_by(email: 'guest@example.com')
+    unless guest_user
+      guest_user = User.new(
+        email: 'guest@example.com',
+        password: 'password123',
+        password_confirmation: 'password123'
+      )
+      guest_user.save!(validate: false)
+    end
+    sign_in guest_user
+    redirect_to dashboard_path
+  end
+
   protected
 
   def update_resource(resource, params)
